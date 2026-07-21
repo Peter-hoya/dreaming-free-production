@@ -1,0 +1,25 @@
+<!--
+  티스토리 스킨의 </head> 바로 앞에 넣는 최후 수단입니다.
+  이 코드는 브라우저 이동과 canonical 보정이며 HTTP 301은 아닙니다.
+  티스토리가 서버 301을 제공한다면 이 코드를 사용하지 말고 서버 301을 우선하세요.
+  적용 전에 티스토리의 최신 운영정책과 스킨 스크립트 허용 범위를 직접 확인하세요.
+  정책상 허용되지 않거나 계정 위험이 있다면 이 코드를 적용하지 마세요.
+-->
+<script>
+  (function () {
+    if (location.hostname !== "1step-by-step.tistory.com") return;
+
+    var path = location.pathname.replace(/^\/m\/entry\//, "/entry/");
+    if (path.indexOf("/entry/") !== 0) return;
+
+    var destination = "https://dreaming-free.com" + path;
+    var canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.rel = "canonical";
+      document.head.appendChild(canonical);
+    }
+    canonical.href = destination;
+    location.replace(destination + location.search + location.hash);
+  })();
+</script>

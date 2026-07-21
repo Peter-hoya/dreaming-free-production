@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+.env*
+!.env.example
+npm-debug.log*
+dev.*.log
+.playwright-mcp/
+*.tsbuildinfo
+__pycache__/
+*.py[cod]
+.DS_Store
