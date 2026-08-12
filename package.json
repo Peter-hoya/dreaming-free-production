@@ -4,11 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/generate_netlify_redirects.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "verify:migration": "node scripts/verify_tistory_migration.mjs",
+    "verify:redirects": "node scripts/generate_netlify_redirects.mjs --check",
     "verify:routes": "node scripts/verify_guide_routes.mjs",
     "verify:tool-seo": "node scripts/verify_tool_seo.mjs",
     "verify:launch": "node scripts/verify_launch_readiness.mjs",
