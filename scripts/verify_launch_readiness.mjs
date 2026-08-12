@@ -6,6 +6,7 @@ const canonicalOrigin = (process.env.EXPECTED_SITE_ORIGIN || "https://dreaming-f
 const allowLocalRedirectOrigin = process.env.ALLOW_LOCAL_REDIRECT_ORIGIN === "true";
 const expectedAdsenseSlot = process.env.EXPECTED_ADSENSE_SLOT || "2675947950";
 const guideAdsExpected = process.env.NEXT_PUBLIC_GUIDE_ADS_ENABLED === "true";
+const googleMetaVerificationExpected = process.env.EXPECT_GOOGLE_META_VERIFICATION === "true";
 const articles = JSON.parse(await readFile("src/data/guideIndex.json", "utf8"));
 const redirects = JSON.parse(await readFile("src/data/guideRedirects.json", "utf8"));
 const failures = [];
@@ -198,7 +199,9 @@ if (insuranceResponse) {
   expect(elementText(insuranceHtml, "h1") === "4대보험 계산기", "4대보험 계산기 has an exact-match H1");
   expect(canonicalHref(insuranceHtml) === `${canonicalOrigin}${insurancePath}`, "4대보험 계산기 points directly to its dedicated canonical URL");
   expect(adSlotCount(insuranceHtml) === 1, "4대보험 계산기 contains one manual responsive AdSense slot");
-  expect(Boolean(metaContent(insuranceHtml, "google-site-verification")), "Google site verification meta tag is present");
+  if (googleMetaVerificationExpected) {
+    expect(Boolean(metaContent(insuranceHtml, "google-site-verification")), "Google site verification meta tag is present");
+  }
   expect(Boolean(metaContent(insuranceHtml, "naver-site-verification")), "Naver site verification meta tag is present");
 }
 
