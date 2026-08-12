@@ -68,7 +68,7 @@ export function localizedAlternates(locale: Locale, path = "") {
     languages: {
       ko: absoluteUrl(`/ko${suffix}`),
       en: absoluteUrl(`/en${suffix}`),
-      "x-default": absoluteUrl(`/en${suffix}`),
+      "x-default": absoluteUrl(`/ko${suffix}`),
     },
   } satisfies NonNullable<Metadata["alternates"]>;
 }

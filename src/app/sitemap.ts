@@ -6,6 +6,8 @@ import { isGuideIndexable } from "@/data/guideQuality";
 import { guidePath } from "@/lib/guideShared";
 import { absoluteUrl } from "@/lib/seo";
 
+export const revalidate = 86400;
+
 const reviewed = new Date("2026-07-21T00:00:00.000Z");
 
 function entry(path: string, priority: number, changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"]): MetadataRoute.Sitemap[number] {
@@ -30,7 +32,7 @@ function localizedEntry(
       languages: {
         ko: absoluteUrl(`/ko${suffix}`),
         en: absoluteUrl(`/en${suffix}`),
-        "x-default": absoluteUrl(`/en${suffix}`),
+        "x-default": absoluteUrl(`/ko${suffix}`),
       },
     },
   };

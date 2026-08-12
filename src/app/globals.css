@@ -2545,12 +2545,17 @@ summary {
 .ad-slot {
   display: grid;
   width: min(calc(100% - 2rem), var(--max));
-  min-height: 180px;
+  min-height: 200px;
   margin: 3.5rem auto;
   padding-block: 1rem;
-  overflow: hidden;
+  overflow: visible;
   border-block: 1px solid var(--line);
   align-content: center;
+  gap: 0.5rem;
+}
+
+.ad-slot[data-ad-state="unfilled"] {
+  display: none;
 }
 
 .ad-slot__label {
@@ -2563,7 +2568,9 @@ summary {
 }
 
 .ad-slot .adsbygoogle {
-  min-height: 120px;
+  width: 100%;
+  min-width: 0;
+  min-height: 160px;
 }
 
 .site-footer {
@@ -2673,6 +2680,17 @@ summary {
 @media (max-width: 760px) {
   .site-shell {
     width: min(calc(100% - 1.25rem), var(--max));
+  }
+
+  .ad-slot {
+    width: 100%;
+    min-height: 300px;
+    margin-block: 2.5rem;
+    padding-block: 0.75rem;
+  }
+
+  .ad-slot .adsbygoogle {
+    min-height: 250px;
   }
 
   .desktop-nav,

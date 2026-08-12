@@ -4,6 +4,8 @@ import process from "node:process";
 const liveOrigin = (process.env.LAUNCH_TEST_ORIGIN || "https://dreaming-free.com").replace(/\/$/, "");
 const canonicalOrigin = (process.env.EXPECTED_SITE_ORIGIN || "https://dreaming-free.com").replace(/\/$/, "");
 const allowLocalRedirectOrigin = process.env.ALLOW_LOCAL_REDIRECT_ORIGIN === "true";
+const expectedAdsenseSlot = process.env.EXPECTED_ADSENSE_SLOT || "2675947950";
+const guideAdsExpected = process.env.NEXT_PUBLIC_GUIDE_ADS_ENABLED === "true";
 const articles = JSON.parse(await readFile("src/data/guideIndex.json", "utf8"));
 const redirects = JSON.parse(await readFile("src/data/guideRedirects.json", "utf8"));
 const failures = [];
@@ -75,6 +77,36 @@ function alternateHref(html, language) {
   return "";
 }
 
+function anchorHrefs(html) {
+  return [...html.matchAll(/<a\b[^>]*\bhref=["']([^"']+)["']/gi)].map((match) => match[1]);
+}
+
+function adSlotCount(html) {
+  return (html.match(new RegExp(`data-ad-slot=["']${expectedAdsenseSlot}["']`, "g")) || []).length;
+}
+
+const rootResponse = await request("/");
+if (rootResponse) {
+  const location = rootResponse.headers.get("location");
+  const target = location ? new URL(location, liveOrigin) : null;
+  expect(rootResponse.status === 308, `/ returns 308 Permanent Redirect (received ${rootResponse.status})`);
+  expect(Boolean(target) && target.pathname === "/ko", "/ redirects directly to /ko");
+}
+
+const koreanHomeResponse = await request("/ko");
+if (koreanHomeResponse) {
+  const koreanHomeHtml = await koreanHomeResponse.text();
+  const hrefs = anchorHrefs(koreanHomeHtml);
+  expect(koreanHomeResponse.status === 200, `/ko returns 200 without a redirect (received ${koreanHomeResponse.status})`);
+  expect(canonicalHref(koreanHomeHtml) === `${canonicalOrigin}/ko`, "/ko has a self-canonical URL");
+  expect(!metaContent(koreanHomeHtml, "robots").includes("noindex"), "/ko is not marked noindex");
+  expect(alternateHref(koreanHomeHtml, "x-default") === `${canonicalOrigin}/ko`, "/ko declares Korean as x-default");
+  expect(!hrefs.includes("/"), "/ko contains no internal home link to the redirecting root URL");
+  expect(hrefs.includes("/ko"), "/ko home links point to the final Korean homepage URL");
+  expect(adSlotCount(koreanHomeHtml) === 1, "/ko contains one manual responsive AdSense slot");
+  expect(koreanHomeHtml.includes('data-full-width-responsive="true"'), "/ko enables full-width responsive mobile ads");
+}
+
 const robotsResponse = await request("/robots.txt");
 if (robotsResponse) {
   const robots = await robotsResponse.text();
@@ -90,6 +122,8 @@ if (sitemapResponse) {
   expect(sitemapResponse.status === 200, `/sitemap.xml returns 200 (received ${sitemapResponse.status})`);
   expect(sitemapLocations.length >= 100, `/sitemap.xml contains at least 100 canonical URLs (received ${sitemapLocations.length})`);
   expect(sitemapLocations.every((location) => location.startsWith(`${canonicalOrigin}/`)), "/sitemap.xml uses only the production origin");
+  expect(sitemapLocations.some((location) => new URL(location).pathname === "/ko"), "/sitemap.xml contains the final /ko homepage URL");
+  expect(!sitemapLocations.some((location) => new URL(location).pathname === "/"), "/sitemap.xml excludes the redirecting root URL");
 }
 
 for (const locale of ["ko", "en"]) {
@@ -163,6 +197,7 @@ if (insuranceResponse) {
   expect(elementText(insuranceHtml, "title").startsWith("4대보험 계산기"), "4대보험 계산기 keeps the exact target query at the start of its title");
   expect(elementText(insuranceHtml, "h1") === "4대보험 계산기", "4대보험 계산기 has an exact-match H1");
   expect(canonicalHref(insuranceHtml) === `${canonicalOrigin}${insurancePath}`, "4대보험 계산기 points directly to its dedicated canonical URL");
+  expect(adSlotCount(insuranceHtml) === 1, "4대보험 계산기 contains one manual responsive AdSense slot");
   expect(Boolean(metaContent(insuranceHtml, "google-site-verification")), "Google site verification meta tag is present");
   expect(Boolean(metaContent(insuranceHtml, "naver-site-verification")), "Naver site verification meta tag is present");
 }
@@ -185,6 +220,15 @@ if (articleResponse) {
   expect(canonicalHref(articleHtml) === `${canonicalOrigin}${encodedPath(representativePath)}`, "representative guide has the production canonical URL");
   expect(!metaContent(articleHtml, "robots").includes("noindex"), "representative guide is not marked noindex");
   expect(articleHtml.includes('"@type":"BlogPosting"'), "representative guide includes BlogPosting structured data");
+  if (guideAdsExpected) expect(adSlotCount(articleHtml) === 1, "representative guide contains one manual in-article AdSense slot");
+}
+
+const gamePath = "/ko/games/arcade-shooter";
+const gameResponse = await request(gamePath);
+if (gameResponse) {
+  const gameHtml = await gameResponse.text();
+  expect(gameResponse.status === 200, `${gamePath} returns 200 (received ${gameResponse.status})`);
+  expect(adSlotCount(gameHtml) === 1, `${gamePath} contains one manual responsive AdSense slot`);
 }
 
 const [alias, destination] = Object.entries(redirects)[0];

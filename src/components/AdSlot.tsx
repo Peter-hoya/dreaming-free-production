@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
-import Script from "next/script";
+import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+import { adsenseClient, adsenseSlot } from "@/lib/adsense";
 
 declare global {
   interface Window {
@@ -10,42 +11,44 @@ declare global {
 }
 
 export function AdSlot({ label }: { label: string }) {
-  const configuredClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
-  const configuredSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT;
-  const client = configuredClient && /^ca-pub-\d+$/.test(configuredClient) ? configuredClient : undefined;
-  const slot = configuredSlot && /^\d+$/.test(configuredSlot) ? configuredSlot : undefined;
+  const pathname = usePathname();
+  const adRef = useRef<HTMLModElement>(null);
+  const [status, setStatus] = useState<"loading" | "filled" | "unfilled">("loading");
 
   useEffect(() => {
-    if (!client || !slot) return;
+    const ad = adRef.current;
+    if (!ad) return;
+
+    setStatus("loading");
+    const syncStatus = () => {
+      const nextStatus = ad.dataset.adStatus;
+      if (nextStatus === "filled" || nextStatus === "unfilled") setStatus(nextStatus);
+    };
+    const observer = new MutationObserver(syncStatus);
+    observer.observe(ad, { attributes: true, attributeFilter: ["data-ad-status"] });
+
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch {
       // Ad blockers and delayed consent may prevent initialization.
     }
-  }, [client, slot]);
-
-  if (!client || !slot) return null;
+    syncStatus();
+    return () => observer.disconnect();
+  }, [pathname]);
 
   return (
-    <>
-      <Script
-        id="adsense-script"
-        async
-        strategy="afterInteractive"
-        crossOrigin="anonymous"
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${client}`}
+    <aside className="ad-slot" aria-label={label} data-ad-state={status}>
+      <span className="ad-slot__label">{label}</span>
+      <ins
+        key={`${pathname}-${adsenseSlot}`}
+        ref={adRef}
+        className="adsbygoogle"
+        style={{ display: "block", width: "100%" }}
+        data-ad-client={adsenseClient}
+        data-ad-slot={adsenseSlot}
+        data-ad-format="auto"
+        data-full-width-responsive="true"
       />
-      <aside className="ad-slot" aria-label={label}>
-        <span className="ad-slot__label">{label}</span>
-        <ins
-          className="adsbygoogle"
-          style={{ display: "block" }}
-          data-ad-client={client}
-          data-ad-slot={slot}
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        />
-      </aside>
-    </>
+    </aside>
   );
 }

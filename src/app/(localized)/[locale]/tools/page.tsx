@@ -1,5 +1,6 @@
 import { ArrowDown } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
+import { AdSlot } from "@/components/AdSlot";
 import { JsonLd } from "@/components/JsonLd";
 import { ToolCardGrid } from "@/components/ToolCardGrid";
 import { ToolSearch } from "@/components/ToolSearch";
@@ -65,7 +66,7 @@ export default async function ToolDirectoryPage({ params }: { params: Promise<{ 
       name: copy.title,
       description: copy.description,
       inLanguage: locale,
-      isPartOf: { "@type": "WebSite", "@id": absoluteUrl("/#website") },
+      isPartOf: { "@type": "WebSite", "@id": absoluteUrl("/ko#website") },
       mainEntity: {
         "@type": "ItemList",
         numberOfItems: tools.length,
@@ -106,6 +107,8 @@ export default async function ToolDirectoryPage({ params }: { params: Promise<{ 
           <ToolSearch locale={locale} />
         </div>
       </section>
+
+      <AdSlot label={locale === "ko" ? "광고" : "Advertisement"} />
 
       <div id="tool-directory">
         <section className="section">

@@ -1,6 +1,7 @@
 import { ArrowDown } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AdSlot } from "@/components/AdSlot";
 import { FaqList } from "@/components/FaqList";
 import { HomeToolDirectory } from "@/components/HomeToolDirectory";
 import { JsonLd } from "@/components/JsonLd";
@@ -32,10 +33,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "@id": absoluteUrl("/#website"),
+      "@id": absoluteUrl("/ko#website"),
       name: "MoaTools",
       alternateName: "모아툴",
-      url: absoluteUrl(),
+      url: absoluteUrl("/ko"),
       inLanguage: ["ko", "en"],
       description: "Free bilingual calculators, browser utilities, and casual web games.",
     },
@@ -79,6 +80,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <HomeToolDirectory items={tools} locale={locale} />
         </div>
       </section>
+
+      <AdSlot label={locale === "ko" ? "광고" : "Advertisement"} />
 
       <section className="section section-toned" id="games">
         <div className="site-shell">

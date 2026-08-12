@@ -2,6 +2,7 @@ import { CheckCircle } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AdSlot } from "@/components/AdSlot";
 import { FaqList } from "@/components/FaqList";
 import { GameWidget } from "@/components/games/GameWidgets";
 import { JsonLd } from "@/components/JsonLd";
@@ -117,6 +118,8 @@ export default async function GamePage({ params }: { params: Promise<{ locale: s
         </aside>
       </section>
 
+      <AdSlot label={locale === "ko" ? "광고" : "Advertisement"} />
+
       <section className="section-compact">
         <div className="site-shell">
           <header className="section-heading"><h2>{copy.faqTitle}</h2></header>
@@ -132,7 +135,7 @@ export default async function GamePage({ params }: { params: Promise<{ locale: s
           url: pageUrl,
           inLanguage: locale,
           dateModified: "2026-07-21",
-          isPartOf: { "@type": "WebSite", "@id": absoluteUrl("/#website"), name: "MoaTools", url: absoluteUrl() },
+          isPartOf: { "@type": "WebSite", "@id": absoluteUrl("/ko#website"), name: "MoaTools", url: absoluteUrl("/ko") },
           mainEntity: {
             "@type": ["VideoGame", "WebApplication"],
             name: game.title[locale],

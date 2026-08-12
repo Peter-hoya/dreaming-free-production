@@ -58,7 +58,7 @@ export default async function ToolPage({ params }: { params: Promise<{ locale: s
       url: pageUrl,
       inLanguage: locale,
       dateModified: "2026-07-21",
-      isPartOf: { "@type": "WebSite", "@id": absoluteUrl("/#website"), name: "MoaTools", url: absoluteUrl() },
+      isPartOf: { "@type": "WebSite", "@id": absoluteUrl("/ko#website"), name: "MoaTools", url: absoluteUrl("/ko") },
       breadcrumb: { "@id": breadcrumbId },
       mainEntity: { "@id": applicationId },
       citation: tool.sources?.[locale].map((source) => ({
@@ -81,7 +81,7 @@ export default async function ToolPage({ params }: { params: Promise<{ locale: s
       browserRequirements: "Requires JavaScript and a modern web browser",
       isAccessibleForFree: true,
       featureList: tool.useCases[locale],
-      provider: { "@type": "Organization", "@id": absoluteUrl("/#organization"), name: "MoaTools" },
+      provider: { "@type": "Organization", "@id": absoluteUrl("/ko#organization"), name: "MoaTools" },
       offers: { "@type": "Offer", price: "0", priceCurrency: locale === "ko" ? "KRW" : "USD" },
       potentialAction: { "@type": "UseAction", target: pageUrl },
     },
@@ -128,6 +128,8 @@ export default async function ToolPage({ params }: { params: Promise<{ locale: s
         <ToolWidget slug={tool.slug} locale={locale} />
       </section>
 
+      <AdSlot label={locale === "ko" ? "광고" : "Advertisement"} />
+
       <section className="section-compact">
         <div className="site-shell article-grid">
           <article className="content-block">
@@ -171,8 +173,6 @@ export default async function ToolPage({ params }: { params: Promise<{ locale: s
           ) : null}
         </div>
       </section>
-
-      <AdSlot label={locale === "ko" ? "광고" : "Advertisement"} />
 
       <section className="section-compact">
         <div className="site-shell">

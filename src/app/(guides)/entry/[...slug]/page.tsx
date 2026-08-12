@@ -20,6 +20,15 @@ type GuidePageProps = {
   params: Promise<{ slug: string[] }>;
 };
 
+function splitGuideContent(contentHtml: string) {
+  const sectionStarts = [...contentHtml.matchAll(/<h2\b/gi)]
+    .map((match) => match.index)
+    .filter((index): index is number => typeof index === "number");
+  const splitAt = sectionStarts[Math.floor(sectionStarts.length / 2)];
+  if (!splitAt) return [contentHtml, ""] as const;
+  return [contentHtml.slice(0, splitAt), contentHtml.slice(splitAt)] as const;
+}
+
 export const dynamicParams = false;
 
 export function generateStaticParams() {
@@ -95,6 +104,10 @@ export default async function GuideArticlePage({ params }: GuidePageProps) {
   const canonicalPath = guidePath(article.slug);
   const canonical = absoluteUrl(canonicalPath);
   const related = getRelatedGuides(article);
+  const showGuideAd = isGuideAdEligible(article.slug);
+  const [contentBeforeAd, contentAfterAd] = showGuideAd
+    ? splitGuideContent(article.contentHtml)
+    : [article.contentHtml, ""];
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -112,7 +125,7 @@ export default async function GuideArticlePage({ params }: GuidePageProps) {
     },
     publisher: {
       "@type": "Organization",
-      "@id": absoluteUrl("/#organization"),
+      "@id": absoluteUrl("/ko#organization"),
       name: "MoaTools",
     },
     articleSection: article.category,
@@ -207,13 +220,20 @@ export default async function GuideArticlePage({ params }: GuidePageProps) {
 
             <div
               className="guide-article-content"
-              dangerouslySetInnerHTML={{ __html: article.contentHtml }}
+              dangerouslySetInnerHTML={{ __html: contentBeforeAd }}
             />
 
-            {isGuideAdEligible(article.slug) ? (
+            {showGuideAd ? (
               <div className="guide-article-ad">
                 <AdSlot label="광고" />
               </div>
+            ) : null}
+
+            {contentAfterAd ? (
+              <div
+                className="guide-article-content"
+                dangerouslySetInnerHTML={{ __html: contentAfterAd }}
+              />
             ) : null}
           </article>
 

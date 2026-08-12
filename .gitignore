@@ -10,3 +10,7 @@ dev.*.log
 __pycache__/
 *.py[cod]
 .DS_Store
+
+# Local Netlify folder
+.netlify
+deno.lock

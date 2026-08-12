@@ -60,9 +60,9 @@ export default function GuideIndexPage() {
     inLanguage: "ko-KR",
     isPartOf: {
       "@type": "WebSite",
-      "@id": absoluteUrl("/#website"),
+      "@id": absoluteUrl("/ko#website"),
       name: "MoaTools",
-      url: absoluteUrl(),
+      url: absoluteUrl("/ko"),
     },
     about: guideCategories,
     mainEntity: {

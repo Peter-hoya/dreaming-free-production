@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import { Analytics } from "@/components/Analytics";
@@ -6,6 +7,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { isLocale, locales, type Locale } from "@/data/site";
+import { adsenseClient } from "@/lib/adsense";
 import {
   absoluteUrl,
   isSiteReadyForIndexing,
@@ -16,13 +18,7 @@ import {
 } from "@/lib/seo";
 import "../../globals.css";
 
-const configuredAdsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
-
-const adsenseClient =
-  configuredAdsenseClient &&
-  /^ca-pub-\d+$/.test(configuredAdsenseClient)
-    ? configuredAdsenseClient
-    : undefined;
+export const revalidate = 86400;
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -81,11 +77,9 @@ export const metadata: Metadata = {
         },
       },
   verification: siteVerification,
-  other: adsenseClient
-    ? {
-        "google-adsense-account": adsenseClient,
-      }
-    : undefined,
+  other: {
+    "google-adsense-account": adsenseClient,
+  },
 };
 
 export function generateStaticParams() {
@@ -112,11 +106,11 @@ export default async function LocaleLayout({
   const organization = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "@id": absoluteUrl("/#organization"),
+    "@id": absoluteUrl("/ko#organization"),
     name: "MoaTools",
     alternateName: "모아툴",
     legalName: operatorName || undefined,
-    url: absoluteUrl(),
+    url: absoluteUrl("/ko"),
     description:
       locale === "ko"
         ? "무료 온라인 계산기와 생활 도구"
@@ -129,14 +123,6 @@ export default async function LocaleLayout({
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
-      <head>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2981823212977040"
-          crossOrigin="anonymous"
-        />
-      </head>
-
       <body suppressHydrationWarning>
         <a className="skip-link" href="#main-content">
           {locale === "ko"
@@ -153,6 +139,13 @@ export default async function LocaleLayout({
         <SiteFooter locale={locale} />
         <JsonLd data={organization} />
         <Analytics />
+        <Script
+          id="google-adsense"
+          async
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
+        />
       </body>
     </html>
   );
