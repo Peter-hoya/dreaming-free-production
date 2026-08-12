@@ -49,6 +49,19 @@ for (const [source, destination] of Object.entries(redirects)) {
 
 const representativeCanonical = `/entry/${articles[0].slug}`;
 const [representativeAlias, representativeAliasDestination] = Object.entries(redirects)[0];
+const doubleEncodedAlias = encodedPath(representativeAlias).replaceAll("%", "%25");
+const doubleEncodedResponse = await fetch(`${origin}${doubleEncodedAlias}${queryMarker}`, {
+  redirect: "manual",
+  headers: { "user-agent": "MoaToolsRouteVerifier/1.0" },
+});
+const doubleEncodedLocation = doubleEncodedResponse.headers.get("location");
+if (
+  doubleEncodedResponse.status !== 301
+  || !doubleEncodedLocation
+  || decodedPath(doubleEncodedLocation) !== representativeAliasDestination.normalize("NFC")
+) {
+  failures.push(`Double-encoded legacy alias: expected 301 to ${representativeAliasDestination}, received ${doubleEncodedResponse.status} ${doubleEncodedLocation || "<missing>"}`);
+}
 const hostChecks = [
   { host: "www.dreaming-free.com", source: representativeCanonical, destination: representativeCanonical },
   { host: "www.dreaming-free.com", source: representativeAlias, destination: representativeAliasDestination },
@@ -85,6 +98,7 @@ if (failures.length) {
     queryPreservationChecks: Object.keys(redirects).length + hostChecks.length,
     wwwHost301: hostChecks.filter(({ host }) => host === "www.dreaming-free.com").length,
     defensiveLegacyHost301: hostChecks.filter(({ host }) => host === "1step-by-step.tistory.com").length,
+    doubleEncodedAlias301: 1,
     unknown404: 1,
   }, null, 2));
 }

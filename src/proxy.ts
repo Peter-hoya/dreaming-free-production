@@ -8,10 +8,15 @@ const legacyTistoryHost = "1step-by-step.tistory.com";
 
 function normalizedPath(pathname: string) {
   let decoded = pathname;
-  try {
-    decoded = decodeURIComponent(pathname);
-  } catch {
-    // nextUrl.pathname can already contain a literal percent sign.
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch {
+      // The path may already contain a literal percent sign.
+      break;
+    }
   }
   return decoded.normalize("NFC").replace(/\/$/, "") || "/";
 }
