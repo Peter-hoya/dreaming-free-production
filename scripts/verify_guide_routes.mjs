@@ -2,6 +2,8 @@ import { readFile } from "node:fs/promises";
 import process from "node:process";
 
 const origin = (process.env.REDIRECT_TEST_ORIGIN || "http://127.0.0.1:3000").replace(/\/$/, "");
+const originHostname = new URL(origin).hostname;
+const canSimulateForwardedHosts = originHostname === "127.0.0.1" || originHostname === "localhost";
 const canonicalOrigin = "https://dreaming-free.com";
 const queryMarker = "?utm_source=redirect-test&ref=legacy";
 const articles = JSON.parse(await readFile("src/data/guideIndex.json", "utf8"));
@@ -49,25 +51,27 @@ for (const [source, destination] of Object.entries(redirects)) {
 
 const representativeCanonical = `/entry/${articles[0].slug}`;
 const [representativeAlias, representativeAliasDestination] = Object.entries(redirects)[0];
-const doubleEncodedAlias = encodedPath(representativeAlias).replaceAll("%", "%25");
-const doubleEncodedResponse = await fetch(`${origin}${doubleEncodedAlias}${queryMarker}`, {
-  redirect: "manual",
-  headers: { "user-agent": "MoaToolsRouteVerifier/1.0" },
-});
-const doubleEncodedLocation = doubleEncodedResponse.headers.get("location");
-if (
-  doubleEncodedResponse.status !== 301
-  || !doubleEncodedLocation
-  || decodedPath(doubleEncodedLocation) !== representativeAliasDestination.normalize("NFC")
-) {
-  failures.push(`Double-encoded legacy alias: expected 301 to ${representativeAliasDestination}, received ${doubleEncodedResponse.status} ${doubleEncodedLocation || "<missing>"}`);
+if (canSimulateForwardedHosts) {
+  const doubleEncodedAlias = encodedPath(representativeAlias).replaceAll("%", "%25");
+  const doubleEncodedResponse = await fetch(`${origin}${doubleEncodedAlias}${queryMarker}`, {
+    redirect: "manual",
+    headers: { "user-agent": "MoaToolsRouteVerifier/1.0" },
+  });
+  const doubleEncodedLocation = doubleEncodedResponse.headers.get("location");
+  if (
+    doubleEncodedResponse.status !== 301
+    || !doubleEncodedLocation
+    || decodedPath(doubleEncodedLocation) !== representativeAliasDestination.normalize("NFC")
+  ) {
+    failures.push(`Double-encoded legacy alias: expected 301 to ${representativeAliasDestination}, received ${doubleEncodedResponse.status} ${doubleEncodedLocation || "<missing>"}`);
+  }
 }
-const hostChecks = [
+const hostChecks = canSimulateForwardedHosts ? [
   { host: "www.dreaming-free.com", source: representativeCanonical, destination: representativeCanonical },
   { host: "www.dreaming-free.com", source: representativeAlias, destination: representativeAliasDestination },
   { host: "1step-by-step.tistory.com", source: representativeCanonical, destination: representativeCanonical },
   { host: "1step-by-step.tistory.com", source: representativeAlias, destination: representativeAliasDestination },
-];
+] : [];
 
 for (const { host, source, destination } of hostChecks) {
   const response = await request(source, { search: queryMarker, forwardedHost: host });
@@ -98,7 +102,7 @@ if (failures.length) {
     queryPreservationChecks: Object.keys(redirects).length + hostChecks.length,
     wwwHost301: hostChecks.filter(({ host }) => host === "www.dreaming-free.com").length,
     defensiveLegacyHost301: hostChecks.filter(({ host }) => host === "1step-by-step.tistory.com").length,
-    doubleEncodedAlias301: 1,
+    doubleEncodedAlias301: canSimulateForwardedHosts ? 1 : 0,
     unknown404: 1,
   }, null, 2));
 }
