@@ -24,10 +24,11 @@ async function collectWebpFiles(directory) {
   return files;
 }
 
-const [articles, indexRows, redirects, manifest] = await Promise.all([
+const [articles, indexRows, redirects, siteRedirects, manifest] = await Promise.all([
   readJson(path.join(dataDir, "guideArticles.json")),
   readJson(path.join(dataDir, "guideIndex.json")),
   readJson(path.join(dataDir, "guideRedirects.json")),
+  readJson(path.join(dataDir, "siteRedirects.json")),
   readJson(path.join(publicDir, "guides", "migration-manifest.json")),
 ]);
 
@@ -35,6 +36,8 @@ assert(articles.length === 45, `Expected 45 articles, found ${articles.length}`)
 assert(indexRows.length === articles.length, "Guide index and article counts differ");
 assert(manifest.articleCount === articles.length, "Manifest article count differs");
 assert(manifest.imageCount === 518, `Expected 518 images, found ${manifest.imageCount}`);
+assert(siteRedirects["/m"] === "/ko", "Missing permanent redirect from the legacy mobile homepage to /ko");
+assert(siteRedirects["/m/entry"] === "/entry", "Missing permanent redirect from the legacy mobile guide index to /entry");
 
 const canonicalPaths = new Set();
 const imagePaths = new Set();

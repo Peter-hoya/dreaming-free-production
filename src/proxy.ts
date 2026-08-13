@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import guideRedirects from "@/data/guideRedirects.json";
+import siteRedirects from "@/data/siteRedirects.json";
 
-const redirects = guideRedirects as Record<string, string>;
+const redirects = {
+  ...(siteRedirects as Record<string, string>),
+  ...(guideRedirects as Record<string, string>),
+};
 const canonicalOrigin = "https://dreaming-free.com";
 const wwwHost = "www.dreaming-free.com";
 const legacyTistoryHost = "1step-by-step.tistory.com";
@@ -22,17 +26,18 @@ function normalizedPath(pathname: string) {
 }
 
 export function proxy(request: NextRequest) {
+  const hasTrailingSlash = request.nextUrl.pathname.length > 1 && request.nextUrl.pathname.endsWith("/");
   const source = normalizedPath(request.nextUrl.pathname);
   const destination = redirects[source];
   const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
   const requestHost = forwardedHost || request.headers.get("host") || request.nextUrl.hostname;
   const hostname = requestHost.split(":")[0].toLowerCase();
   const shouldNormalizeHost = hostname === wwwHost || hostname === legacyTistoryHost;
-  if ((!destination || destination === source) && !shouldNormalizeHost) return NextResponse.next();
+  if ((!destination || destination === source) && !shouldNormalizeHost && !hasTrailingSlash) return NextResponse.next();
 
   const target = shouldNormalizeHost
     ? new URL(destination || source, canonicalOrigin)
-    : request.nextUrl.clone();
+    : new URL(request.url);
   target.pathname = destination || source;
   target.search = request.nextUrl.search;
   return NextResponse.redirect(target, 301);
