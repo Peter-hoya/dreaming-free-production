@@ -99,6 +99,7 @@ npm run submit:indexnow -- /ko/tools/four-major-insurance
 - `https://1step-by-step.tistory.com/rss`와 sitemap에 함께 노출된 공개 글 45개를 `scripts/import_tistory.py`로 가져옵니다.
 - 기존 `dreaming-free.com/entry/<기존-슬러그>`는 새 사이트에서도 같은 주소로 `200`을 반환합니다.
 - 제목의 공백만 하이픈으로 바꾼 별칭과 `/m/entry/...` 주소는 `src/proxy.ts`에서 기존 canonical 주소로 정확한 `301`을 반환합니다.
+- 기존 모바일 홈 `/m`은 한국어 홈 `/ko`로, 모바일 글 목록 `/m/entry`는 `/entry`로 한 번에 `301` 이동합니다.
 - `src/app/sitemap.ts`가 빌드 시 도구·게임·정책 페이지와 45개 글을 합쳐 `/sitemap.xml`을 동적으로 생성합니다. 별칭과 모바일 중복 주소는 sitemap에 넣지 않습니다.
 - 가져온 이미지 518개는 `public/guides`에 WebP로 보관하므로 서명 만료가 있는 외부 이미지 주소에 의존하지 않습니다.
 - 가져오기 스크립트는 기존 티스토리 광고·추적 코드와 iframe을 제거하고, 제휴 링크에 `nofollow sponsored`를 붙입니다.

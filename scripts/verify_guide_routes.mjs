@@ -8,6 +8,7 @@ const canonicalOrigin = "https://dreaming-free.com";
 const queryMarker = "?utm_source=redirect-test&ref=legacy";
 const articles = JSON.parse(await readFile("src/data/guideIndex.json", "utf8"));
 const redirects = JSON.parse(await readFile("src/data/guideRedirects.json", "utf8"));
+const siteRedirects = JSON.parse(await readFile("src/data/siteRedirects.json", "utf8"));
 
 function encodedPath(pathname) {
   return pathname
@@ -31,6 +32,18 @@ async function request(pathname, { search = "", forwardedHost } = {}) {
 }
 
 const failures = [];
+for (const [source, destination] of Object.entries(siteRedirects)) {
+  const response = await request(source, { search: queryMarker });
+  const location = response.headers.get("location");
+  const target = location ? new URL(location, origin) : null;
+  if (response.status !== 301) {
+    failures.push(`${source}: expected 301, received ${response.status}`);
+  } else if (!target || target.pathname !== destination) {
+    failures.push(`${source}: expected Location ${destination}, received ${location || "<missing>"}`);
+  } else if (target.search !== queryMarker) {
+    failures.push(`${source}: redirect did not preserve ${queryMarker}`);
+  }
+}
 for (const article of articles) {
   const pathname = `/entry/${article.slug}`;
   const response = await request(pathname);
@@ -99,7 +112,8 @@ if (failures.length) {
     origin,
     canonical200: articles.length,
     permanent301: Object.keys(redirects).length,
-    queryPreservationChecks: Object.keys(redirects).length + hostChecks.length,
+    sitePermanent301: Object.keys(siteRedirects).length,
+    queryPreservationChecks: Object.keys(redirects).length + Object.keys(siteRedirects).length + hostChecks.length,
     wwwHost301: hostChecks.filter(({ host }) => host === "www.dreaming-free.com").length,
     defensiveLegacyHost301: hostChecks.filter(({ host }) => host === "1step-by-step.tistory.com").length,
     doubleEncodedAlias301: canSimulateForwardedHosts ? 1 : 0,

@@ -1,4 +1,6 @@
-# Generated from src/data/guideRedirects.json. Run npm run prebuild after editing the redirect map.
+# Generated from src/data/siteRedirects.json and src/data/guideRedirects.json. Run npm run prebuild after editing either map.
+/m /ko 301!
+/m/entry /entry 301!
 /entry/2024-%EA%B7%BC%EB%A1%9C%EC%9E%A5%EB%A0%A4%EA%B8%88-%EC%8B%A0%EC%B2%AD-%EB%B0%A9%EB%B2%95/%EC%8B%A0%EC%B2%AD-%EC%9E%90%EA%B2%A9/%EC%A7%80%EA%B8%89%EC%9D%BC /entry/2024-%EA%B7%BC%EB%A1%9C%EC%9E%A5%EB%A0%A4%EA%B8%88-%EC%8B%A0%EC%B2%AD-%EB%B0%A9%EB%B2%95%EC%8B%A0%EC%B2%AD-%EC%9E%90%EA%B2%A9%EC%A7%80%EA%B8%89%EC%9D%BC 301!
 /m/entry/2024-%EA%B7%BC%EB%A1%9C%EC%9E%A5%EB%A0%A4%EA%B8%88-%EC%8B%A0%EC%B2%AD-%EB%B0%A9%EB%B2%95%EC%8B%A0%EC%B2%AD-%EC%9E%90%EA%B2%A9%EC%A7%80%EA%B8%89%EC%9D%BC /entry/2024-%EA%B7%BC%EB%A1%9C%EC%9E%A5%EB%A0%A4%EA%B8%88-%EC%8B%A0%EC%B2%AD-%EB%B0%A9%EB%B2%95%EC%8B%A0%EC%B2%AD-%EC%9E%90%EA%B2%A9%EC%A7%80%EA%B8%89%EC%9D%BC 301!
 /m/entry/2024-%EC%83%81%EB%B0%98%EA%B8%B0-%EB%82%98%ED%9B%88%EC%95%84-%EB%9D%BC%EC%8A%A4%ED%8A%B8-%EC%BD%98%EC%84%9C%ED%8A%B8-%EC%98%88%EB%A7%A4%EC%9D%BC /entry/2024-%EC%83%81%EB%B0%98%EA%B8%B0-%EB%82%98%ED%9B%88%EC%95%84-%EB%9D%BC%EC%8A%A4%ED%8A%B8-%EC%BD%98%EC%84%9C%ED%8A%B8-%EC%98%88%EB%A7%A4%EC%9D%BC 301!

@@ -108,6 +108,16 @@ if (koreanHomeResponse) {
   expect(koreanHomeHtml.includes('data-full-width-responsive="true"'), "/ko enables full-width responsive mobile ads");
 }
 
+for (const [mobilePath, expectedPath] of [["/m", "/ko"], ["/m/", "/ko"], ["/m/entry", "/entry"]]) {
+  const mobileResponse = await request(mobilePath);
+  if (mobileResponse) {
+    const location = mobileResponse.headers.get("location");
+    const target = location ? new URL(location, liveOrigin) : null;
+    expect(mobileResponse.status === 301, `${mobilePath} returns 301 Permanent Redirect (received ${mobileResponse.status})`);
+    expect(Boolean(target) && target.pathname === expectedPath, `${mobilePath} redirects directly to ${expectedPath}`);
+  }
+}
+
 const robotsResponse = await request("/robots.txt");
 if (robotsResponse) {
   const robots = await robotsResponse.text();
@@ -125,6 +135,10 @@ if (sitemapResponse) {
   expect(sitemapLocations.every((location) => location.startsWith(`${canonicalOrigin}/`)), "/sitemap.xml uses only the production origin");
   expect(sitemapLocations.some((location) => new URL(location).pathname === "/ko"), "/sitemap.xml contains the final /ko homepage URL");
   expect(!sitemapLocations.some((location) => new URL(location).pathname === "/"), "/sitemap.xml excludes the redirecting root URL");
+  expect(!sitemapLocations.some((location) => {
+    const pathname = new URL(location).pathname;
+    return pathname === "/m" || pathname.startsWith("/m/");
+  }), "/sitemap.xml excludes all legacy mobile URLs");
 }
 
 for (const locale of ["ko", "en"]) {
