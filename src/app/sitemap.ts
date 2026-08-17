@@ -2,7 +2,6 @@ import type { MetadataRoute } from "next";
 import { games, locales, tools } from "@/data/site";
 import { infoPageOrder } from "@/data/info";
 import guideIndex from "@/data/guideIndex.json";
-import { isGuideIndexable } from "@/data/guideQuality";
 import { guidePath } from "@/lib/guideShared";
 import { absoluteUrl } from "@/lib/seo";
 
@@ -49,7 +48,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }
   pages.push(entry("/entry", 0.8, "weekly"));
   for (const article of guideIndex) {
-    if (!isGuideIndexable(article.slug)) continue;
     pages.push({
       url: absoluteUrl(guidePath(article.slug)),
       lastModified: new Date(article.modifiedAt),

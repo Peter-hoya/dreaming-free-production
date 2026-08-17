@@ -47,6 +47,7 @@ for (const article of articles) {
   assert(!canonicalPaths.has(canonical), `Duplicate canonical path: ${canonical}`);
   canonicalPaths.add(canonical);
   assert(article.title && article.description && article.contentHtml, `Incomplete article: ${canonical}`);
+  assert(article.characterCount >= 500, `Thin guide content (${article.characterCount} characters): ${canonical}`);
   assert(!/<(?:script|iframe|ins|form|style|object|embed|input|noscript|textarea)\b/i.test(article.contentHtml), `Forbidden HTML in ${canonical}`);
   assert(!/(?:kakaocdn|t1\.daumcdn|adsbygoogle)/i.test(article.contentHtml), `Remote or ad asset in ${canonical}`);
   assert(!/alt=(?:""|'')/i.test(article.contentHtml), `Empty image alt in ${canonical}`);

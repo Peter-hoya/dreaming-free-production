@@ -229,15 +229,43 @@ if (hubResponse) {
   expect(/^ca-pub-\d+$/.test(metaContent(hubHtml, "google-adsense-account")), "/entry exposes a valid AdSense site-verification meta tag");
 }
 
+const guideSitemapLocations = sitemapLocations.filter((location) => new URL(location).pathname.startsWith("/entry/"));
+expect(
+  guideSitemapLocations.length === articles.length,
+  `/sitemap.xml contains all ${articles.length} canonical guide URLs (received ${guideSitemapLocations.length})`,
+);
+
+for (const article of articles) {
+  const pathname = `/entry/${article.slug}`;
+  const canonical = `${canonicalOrigin}${encodedPath(pathname)}`;
+  const response = await request(pathname, {
+    headers: {
+      "user-agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36 (compatible; Google-InspectionTool/1.0;)",
+    },
+  });
+  if (!response) continue;
+  const html = await response.text();
+  expect(response.status === 200, `${pathname} returns 200 (received ${response.status})`);
+  expect(canonicalHref(html) === canonical, `${pathname} has the expected self-canonical URL`);
+  expect(!metaContent(html, "robots").includes("noindex"), `${pathname} is not marked noindex`);
+  expect(!response.headers.get("x-robots-tag")?.includes("noindex"), `${pathname} has no X-Robots-Tag noindex rule`);
+  expect(html.includes('"@type":"BlogPosting"'), `${pathname} includes BlogPosting structured data`);
+  expect(sitemapLocations.includes(canonical), `${pathname} is included in /sitemap.xml`);
+
+  const mobilePath = `/m${pathname}`;
+  const mobileResponse = await request(mobilePath);
+  if (!mobileResponse) continue;
+  const location = mobileResponse.headers.get("location");
+  const target = location ? new URL(location, liveOrigin) : null;
+  expect(mobileResponse.status === 301, `${mobilePath} returns 301 (received ${mobileResponse.status})`);
+  expect(Boolean(target) && decodeURIComponent(target.pathname) === pathname, `${mobilePath} redirects directly to its canonical guide`);
+}
+
 const representativePath = `/entry/${articles[0].slug}`;
-const articleResponse = await request(representativePath);
-if (articleResponse) {
-  const articleHtml = await articleResponse.text();
-  expect(articleResponse.status === 200, `${representativePath} returns 200 (received ${articleResponse.status})`);
-  expect(canonicalHref(articleHtml) === `${canonicalOrigin}${encodedPath(representativePath)}`, "representative guide has the production canonical URL");
-  expect(!metaContent(articleHtml, "robots").includes("noindex"), "representative guide is not marked noindex");
-  expect(articleHtml.includes('"@type":"BlogPosting"'), "representative guide includes BlogPosting structured data");
-  if (guideAdsExpected) expect(adSlotCount(articleHtml) === 1, "representative guide contains one manual in-article AdSense slot");
+const representativeResponse = await request(representativePath);
+if (representativeResponse) {
+  const representativeHtml = await representativeResponse.text();
+  if (guideAdsExpected) expect(adSlotCount(representativeHtml) === 1, "representative guide contains one manual in-article AdSense slot");
 }
 
 const gamePath = "/ko/games/arcade-shooter";
