@@ -5,7 +5,7 @@ import { AdSlot } from "@/components/AdSlot";
 import { ArticleToc } from "@/components/guides/ArticleToc";
 import { RelatedGuides } from "@/components/guides/RelatedGuides";
 import { JsonLd } from "@/components/JsonLd";
-import { isGuideAdEligible, isGuideIndexable } from "@/data/guideQuality";
+import { isArchiveOnlyGuide, isGuideAdEligible } from "@/data/guideQuality";
 import {
   formatGuideDate,
   getGuideBySlug,
@@ -90,9 +90,7 @@ export async function generateMetadata({ params }: GuidePageProps): Promise<Meta
           noarchive: true,
           googleBot: { index: false, follow: false, noarchive: true },
         }
-      : isGuideIndexable(article.slug)
-        ? undefined
-        : { index: false, follow: true, noarchive: true },
+      : undefined,
   };
 }
 
@@ -203,13 +201,13 @@ export default async function GuideArticlePage({ params }: GuidePageProps) {
               </p>
             </aside>
 
-            {!isGuideIndexable(article.slug) ? (
+            {isArchiveOnlyGuide(article.slug) ? (
               <section className="guide-archive-context" aria-labelledby="archive-context-title">
                 <h2 id="archive-context-title">지난 일정의 보관 기록입니다</h2>
                 <p>
                   이 글의 2024년 상반기 공연 일정은 종료되었습니다. 현재 공연과 예매 정보는
-                  아티스트 및 공식 예매처의 최신 공지를 확인하세요. 검색 혼선을 막기 위해 이
-                  보관 글에는 광고를 표시하지 않고 검색 색인도 요청하지 않습니다.
+                  아티스트 및 공식 예매처의 최신 공지를 확인하세요. 아래 내용은 당시 일정을
+                  확인하려는 독자를 위한 기록이며, 보관 글에는 광고를 표시하지 않습니다.
                 </p>
               </section>
             ) : null}
