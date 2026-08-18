@@ -38,7 +38,7 @@ for (const [source, destination] of Object.entries(siteRedirects)) {
   const target = location ? new URL(location, origin) : null;
   if (response.status !== 301) {
     failures.push(`${source}: expected 301, received ${response.status}`);
-  } else if (!target || target.pathname !== destination) {
+  } else if (!target || decodedPath(target.href) !== destination.normalize("NFC")) {
     failures.push(`${source}: expected Location ${destination}, received ${location || "<missing>"}`);
   } else if (target.search !== queryMarker) {
     failures.push(`${source}: redirect did not preserve ${queryMarker}`);
@@ -48,6 +48,18 @@ for (const article of articles) {
   const pathname = `/entry/${article.slug}`;
   const response = await request(pathname);
   if (response.status !== 200) failures.push(`${pathname}: expected 200, received ${response.status}`);
+
+  for (const commentsPath of [`${pathname}/comments`, `/m${pathname}/comments`]) {
+    const commentsResponse = await request(commentsPath, { search: queryMarker });
+    const commentsLocation = commentsResponse.headers.get("location");
+    if (commentsResponse.status !== 301) {
+      failures.push(`${commentsPath}: expected 301, received ${commentsResponse.status}`);
+    } else if (!commentsLocation || decodedPath(commentsLocation) !== pathname.normalize("NFC")) {
+      failures.push(`${commentsPath}: expected Location ${pathname}, received ${commentsLocation || "<missing>"}`);
+    } else if (new URL(commentsLocation, origin).search !== queryMarker) {
+      failures.push(`${commentsPath}: redirect did not preserve ${queryMarker}`);
+    }
+  }
 }
 
 for (const [source, destination] of Object.entries(redirects)) {
@@ -59,6 +71,16 @@ for (const [source, destination] of Object.entries(redirects)) {
     failures.push(`${source}: expected Location ${destination}, received ${location || "<missing>"}`);
   } else if (new URL(location, origin).search !== queryMarker) {
     failures.push(`${source}: redirect did not preserve ${queryMarker}`);
+  }
+
+  const commentsResponse = await request(`${source}/comments`, { search: queryMarker });
+  const commentsLocation = commentsResponse.headers.get("location");
+  if (commentsResponse.status !== 301) {
+    failures.push(`${source}/comments: expected 301, received ${commentsResponse.status}`);
+  } else if (!commentsLocation || decodedPath(commentsLocation) !== destination.normalize("NFC")) {
+    failures.push(`${source}/comments: expected Location ${destination}, received ${commentsLocation || "<missing>"}`);
+  } else if (new URL(commentsLocation, origin).search !== queryMarker) {
+    failures.push(`${source}/comments: redirect did not preserve ${queryMarker}`);
   }
 }
 
@@ -113,6 +135,7 @@ if (failures.length) {
     canonical200: articles.length,
     permanent301: Object.keys(redirects).length,
     sitePermanent301: Object.keys(siteRedirects).length,
+    legacyComment301: (articles.length * 2) + Object.keys(redirects).length,
     queryPreservationChecks: Object.keys(redirects).length + Object.keys(siteRedirects).length + hostChecks.length,
     wwwHost301: hostChecks.filter(({ host }) => host === "www.dreaming-free.com").length,
     defensiveLegacyHost301: hostChecks.filter(({ host }) => host === "1step-by-step.tistory.com").length,

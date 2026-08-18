@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import guideIndex from "@/data/guideIndex.json";
 import guideRedirects from "@/data/guideRedirects.json";
 import siteRedirects from "@/data/siteRedirects.json";
 
@@ -6,6 +7,9 @@ const redirects = {
   ...(siteRedirects as Record<string, string>),
   ...(guideRedirects as Record<string, string>),
 };
+const canonicalGuidePaths = new Set(
+  guideIndex.map((article) => `/entry/${article.slug}`),
+);
 const canonicalOrigin = "https://dreaming-free.com";
 const wwwHost = "www.dreaming-free.com";
 const legacyTistoryHost = "1step-by-step.tistory.com";
@@ -25,10 +29,20 @@ function normalizedPath(pathname: string) {
   return decoded.normalize("NFC").replace(/\/$/, "") || "/";
 }
 
+function legacyCommentDestination(source: string) {
+  const commentSuffix = "/comments";
+  if (!source.endsWith(commentSuffix)) return undefined;
+
+  const articlePath = source.slice(0, -commentSuffix.length);
+  return redirects[articlePath as keyof typeof redirects]
+    || (canonicalGuidePaths.has(articlePath) ? articlePath : undefined);
+}
+
 export function proxy(request: NextRequest) {
   const hasTrailingSlash = request.nextUrl.pathname.length > 1 && request.nextUrl.pathname.endsWith("/");
   const source = normalizedPath(request.nextUrl.pathname);
-  const destination = redirects[source];
+  const destination = redirects[source as keyof typeof redirects]
+    || legacyCommentDestination(source);
   const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
   const requestHost = forwardedHost || request.headers.get("host") || request.nextUrl.hostname;
   const hostname = requestHost.split(":")[0].toLowerCase();

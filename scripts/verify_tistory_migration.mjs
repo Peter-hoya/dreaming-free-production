@@ -38,6 +38,8 @@ assert(manifest.articleCount === articles.length, "Manifest article count differ
 assert(manifest.imageCount === 518, `Expected 518 images, found ${manifest.imageCount}`);
 assert(siteRedirects["/m"] === "/ko", "Missing permanent redirect from the legacy mobile homepage to /ko");
 assert(siteRedirects["/m/entry"] === "/entry", "Missing permanent redirect from the legacy mobile guide index to /entry");
+assert(siteRedirects["/53"] === "/entry/나훈아-부산콘서트-예매-방법-일정-주차장", "Missing numeric Tistory redirect for /53");
+assert(siteRedirects["/m/53"] === siteRedirects["/53"], "Missing mobile numeric Tistory redirect for /m/53");
 
 const canonicalPaths = new Set();
 const imagePaths = new Set();

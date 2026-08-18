@@ -123,6 +123,14 @@ export default async function LocaleLayout({
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
+      <head>
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="MoaTools 생활 가이드 RSS"
+          href={absoluteUrl("/rss")}
+        />
+      </head>
       <body suppressHydrationWarning>
         <a className="skip-link" href="#main-content">
           {locale === "ko"

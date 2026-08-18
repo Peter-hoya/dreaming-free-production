@@ -78,6 +78,17 @@ function alternateHref(html, language) {
   return "";
 }
 
+function rssHref(html) {
+  const tags = html.match(/<link\b[^>]*>/gi) || [];
+  for (const tag of tags) {
+    const rel = tag.match(/\brel=["']([^"']+)["']/i)?.[1] || "";
+    const type = tag.match(/\btype=["']([^"']+)["']/i)?.[1] || "";
+    const href = tag.match(/\bhref=["']([^"']+)["']/i)?.[1] || "";
+    if (rel.split(/\s+/).includes("alternate") && type === "application/rss+xml") return href;
+  }
+  return "";
+}
+
 function anchorHrefs(html) {
   return [...html.matchAll(/<a\b[^>]*\bhref=["']([^"']+)["']/gi)].map((match) => match[1]);
 }
@@ -104,6 +115,7 @@ if (koreanHomeResponse) {
   expect(alternateHref(koreanHomeHtml, "x-default") === `${canonicalOrigin}/ko`, "/ko declares Korean as x-default");
   expect(!hrefs.includes("/"), "/ko contains no internal home link to the redirecting root URL");
   expect(hrefs.includes("/ko"), "/ko home links point to the final Korean homepage URL");
+  expect(rssHref(koreanHomeHtml) === `${canonicalOrigin}/rss`, "/ko advertises the canonical RSS feed");
   expect(adSlotCount(koreanHomeHtml) === 1, "/ko contains one manual responsive AdSense slot");
   expect(koreanHomeHtml.includes('data-full-width-responsive="true"'), "/ko enables full-width responsive mobile ads");
 }
@@ -116,6 +128,17 @@ for (const [mobilePath, expectedPath] of [["/m", "/ko"], ["/m/", "/ko"], ["/m/en
     expect(mobileResponse.status === 301, `${mobilePath} returns 301 Permanent Redirect (received ${mobileResponse.status})`);
     expect(Boolean(target) && target.pathname === expectedPath, `${mobilePath} redirects directly to ${expectedPath}`);
   }
+}
+
+const numericLegacyResponse = await request("/53");
+if (numericLegacyResponse) {
+  const location = numericLegacyResponse.headers.get("location");
+  const target = location ? new URL(location, liveOrigin) : null;
+  expect(numericLegacyResponse.status === 301, `/53 returns 301 Permanent Redirect (received ${numericLegacyResponse.status})`);
+  expect(
+    Boolean(target) && decodeURIComponent(target.pathname) === "/entry/나훈아-부산콘서트-예매-방법-일정-주차장",
+    "/53 redirects directly to its migrated guide",
+  );
 }
 
 const robotsResponse = await request("/robots.txt");
@@ -139,6 +162,17 @@ if (sitemapResponse) {
     const pathname = new URL(location).pathname;
     return pathname === "/m" || pathname.startsWith("/m/");
   }), "/sitemap.xml excludes all legacy mobile URLs");
+}
+
+const rssResponse = await request("/rss");
+if (rssResponse) {
+  const rss = await rssResponse.text();
+  const rssItemCount = (rss.match(/<item>/g) || []).length;
+  expect(rssResponse.status === 200, `/rss returns 200 (received ${rssResponse.status})`);
+  expect(rssResponse.headers.get("content-type")?.includes("application/rss+xml"), "/rss has an RSS content type");
+  expect(rssItemCount === articles.length, `/rss contains all ${articles.length} migrated guides (received ${rssItemCount})`);
+  expect(rss.includes(`${canonicalOrigin}/entry/`), "/rss links to canonical guide URLs");
+  expect(!rss.includes(`${canonicalOrigin}/m/`), "/rss excludes legacy mobile URLs");
 }
 
 for (const locale of ["ko", "en"]) {
@@ -226,6 +260,7 @@ if (hubResponse) {
   expect(canonicalHref(hubHtml) === `${canonicalOrigin}/entry`, "/entry has the production canonical URL");
   expect(!metaContent(hubHtml, "robots").includes("noindex"), "/entry is not marked noindex");
   expect(!hubHtml.includes("moatools.example"), "/entry contains no placeholder domain");
+  expect(rssHref(hubHtml) === `${canonicalOrigin}/rss`, "/entry advertises the canonical RSS feed");
   expect(/^ca-pub-\d+$/.test(metaContent(hubHtml, "google-adsense-account")), "/entry exposes a valid AdSense site-verification meta tag");
 }
 
@@ -259,6 +294,18 @@ for (const article of articles) {
   const target = location ? new URL(location, liveOrigin) : null;
   expect(mobileResponse.status === 301, `${mobilePath} returns 301 (received ${mobileResponse.status})`);
   expect(Boolean(target) && decodeURIComponent(target.pathname) === pathname, `${mobilePath} redirects directly to its canonical guide`);
+
+  for (const commentsPath of [`${pathname}/comments`, `${mobilePath}/comments`]) {
+    const commentsResponse = await request(commentsPath);
+    if (!commentsResponse) continue;
+    const commentsLocation = commentsResponse.headers.get("location");
+    const commentsTarget = commentsLocation ? new URL(commentsLocation, liveOrigin) : null;
+    expect(commentsResponse.status === 301, `${commentsPath} returns 301 (received ${commentsResponse.status})`);
+    expect(
+      Boolean(commentsTarget) && decodeURIComponent(commentsTarget.pathname) === pathname,
+      `${commentsPath} redirects directly to its canonical guide`,
+    );
+  }
 }
 
 const representativePath = `/entry/${articles[0].slug}`;

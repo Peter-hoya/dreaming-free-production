@@ -3,10 +3,28 @@ import process from "node:process";
 
 const siteRedirectsPath = "src/data/siteRedirects.json";
 const guideRedirectsPath = "src/data/guideRedirects.json";
+const guideIndexPath = "src/data/guideIndex.json";
 const outputPath = "public/_redirects";
+const siteRedirects = JSON.parse(await readFile(siteRedirectsPath, "utf8"));
+const guideRedirects = JSON.parse(await readFile(guideRedirectsPath, "utf8"));
+const guideIndex = JSON.parse(await readFile(guideIndexPath, "utf8"));
+const commentRedirects = {};
+
+for (const article of guideIndex) {
+  const canonical = `/entry/${article.slug}`;
+  commentRedirects[`${canonical}/comments`] = canonical;
+}
+
+for (const [source, destination] of Object.entries(guideRedirects)) {
+  if (source.startsWith("/entry/") || source.startsWith("/m/entry/")) {
+    commentRedirects[`${source}/comments`] = destination;
+  }
+}
+
 const redirects = {
-  ...JSON.parse(await readFile(siteRedirectsPath, "utf8")),
-  ...JSON.parse(await readFile(guideRedirectsPath, "utf8")),
+  ...siteRedirects,
+  ...guideRedirects,
+  ...commentRedirects,
 };
 
 function encodePath(pathname) {
@@ -18,7 +36,7 @@ function encodePath(pathname) {
 }
 
 const lines = [
-  "# Generated from src/data/siteRedirects.json and src/data/guideRedirects.json. Run npm run prebuild after editing either map.",
+  "# Generated from redirect data and guideIndex.json. Run npm run prebuild after editing migration data.",
   ...Object.entries(redirects).map(([source, destination]) =>
     `${encodePath(source)} ${encodePath(destination)} 301!`),
   "",
