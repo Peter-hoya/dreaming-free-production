@@ -74,6 +74,14 @@ export default function GuideLayout({ children }: { children: ReactNode }) {
 
   return (
     <html lang="ko" data-scroll-behavior="smooth" suppressHydrationWarning>
+      <head>
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="MoaTools 생활 가이드 RSS"
+          href={absoluteUrl("/rss")}
+        />
+      </head>
       <body className="guide-site" suppressHydrationWarning>
         <a className="skip-link" href="#main-content">본문 바로가기</a>
         <SiteHeader locale="ko" showLanguageSwitcher={false} />
