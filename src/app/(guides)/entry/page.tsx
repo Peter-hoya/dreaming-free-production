@@ -111,7 +111,7 @@ export default function GuideIndexPage() {
           <div className="guide-hub-hero__copy">
             <span className="guide-eyebrow">생활 가이드</span>
             <h1 id="guide-hub-title">생활에 필요한 답을 한곳에</h1>
-            <p>직접 정리한 45개의 생활 정보를 기존 주소 그대로 이어서 제공합니다.</p>
+            <p>검토를 마친 {guideSummaries.length}개의 생활 정보와 레거시 주소 호환성을 함께 제공합니다.</p>
             <a className="guide-primary-link" href="#guide-library">전체 글 찾아보기</a>
           </div>
 

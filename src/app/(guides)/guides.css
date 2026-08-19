@@ -569,6 +569,118 @@
   line-height: 1.95;
 }
 
+.rgb-color-tool {
+  margin: 0 0 2rem;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+  background: var(--surface);
+}
+
+.rgb-color-tool__heading {
+  padding: 1.35rem 1.4rem 1rem;
+}
+
+.rgb-color-tool__heading > span {
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.rgb-color-tool__heading h2 {
+  margin: 0.35rem 0;
+  font-size: clamp(1.25rem, 3vw, 1.65rem);
+}
+
+.rgb-color-tool__heading p,
+.rgb-color-tool__status {
+  margin: 0;
+  color: var(--muted);
+}
+
+.rgb-color-tool__body {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.8fr) minmax(250px, 1.2fr);
+  gap: 1rem;
+  padding: 0 1.4rem 1.4rem;
+}
+
+.rgb-color-tool__preview {
+  min-height: 220px;
+  border: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+  border-radius: 1rem;
+}
+
+.rgb-color-tool__controls,
+.rgb-color-tool__hex {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.rgb-color-tool__channels {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+}
+
+.rgb-color-tool__channels label,
+.rgb-color-tool__hex {
+  font-weight: 750;
+}
+
+.rgb-color-tool input {
+  width: 100%;
+  margin-top: 0.35rem;
+  border: 1px solid var(--control-line);
+  border-radius: 0.7rem;
+  background: var(--bg);
+  color: inherit;
+  padding: 0.75rem 0.8rem;
+  font: inherit;
+}
+
+.rgb-color-tool input[aria-invalid="true"] {
+  border-color: #b42318;
+}
+
+.rgb-color-tool__hex small {
+  color: #b42318;
+  font-weight: 650;
+}
+
+.rgb-color-tool__results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.rgb-color-tool__results button {
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  padding: 0.68rem 0.95rem;
+  font: inherit;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.rgb-color-tool__status {
+  min-height: 1.5em;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .rgb-color-tool__body {
+    grid-template-columns: 1fr;
+  }
+
+  .rgb-color-tool__preview {
+    min-height: 160px;
+  }
+}
+
 .guide-article-content > :first-child {
   margin-top: 0;
 }
