@@ -1,0 +1,489 @@
+[
+  {
+    "title": "2024 근로장려금 신청 방법/신청 자격/지급일",
+    "currentSlug": "2024-근로장려금-신청-방법신청-자격지급일",
+    "status": "REDIRECT",
+    "targetSlug": "근로장려금-신청-방법-자격-지급일",
+    "targetUrl": "/entry/근로장려금-신청-방법-자격-지급일",
+    "aliases": [
+      "2024-근로장려금-신청-방법/신청-자격/지급일"
+    ],
+    "legacyPaths": [],
+    "notes": "연도 없는 2026 근로장려금 대표 글로 통합"
+  },
+  {
+    "title": "2024 상반기 나훈아 라스트 콘서트 예매일",
+    "currentSlug": "2024-상반기-나훈아-라스트-콘서트-예매일",
+    "status": "KEEP",
+    "targetSlug": "2024-상반기-나훈아-라스트-콘서트-예매일",
+    "targetUrl": "/entry/2024-상반기-나훈아-라스트-콘서트-예매일",
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "종료된 일정임을 명시한 무광고 보관 기록"
+  },
+  {
+    "title": "쿠팡플레이 중계 무료 보기",
+    "currentSlug": "쿠팡플레이-중계-무료-보기",
+    "status": "UPDATE",
+    "targetSlug": "쿠팡플레이-중계-무료-보기",
+    "targetUrl": "/entry/쿠팡플레이-중계-무료-보기",
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "무료·와우·스포츠 패스 범위를 2026 기준으로 구분"
+  },
+  {
+    "title": "삼성화재 자녀사랑 할인 특약 서비스 신청 방법",
+    "currentSlug": "삼성화재-자녀사랑-할인-특약-서비스-신청-방법",
+    "status": "UPDATE",
+    "targetSlug": "삼성화재-자녀사랑-할인-특약-서비스-신청-방법",
+    "targetUrl": "/entry/삼성화재-자녀사랑-할인-특약-서비스-신청-방법",
+    "aliases": [
+      "삼성화재-자녀사랑-할인-특약-신청-방법"
+    ],
+    "legacyPaths": [],
+    "notes": "삼성화재 공식 특약 기준으로 갱신"
+  },
+  {
+    "title": "갤럭시 휴대폰 화면 안보일때 데이터 백업 옮기는 방법",
+    "currentSlug": "갤럭시-휴대폰-화면-안보일때-데이터-백업-옮기는-방법",
+    "status": "UPDATE",
+    "targetSlug": "갤럭시-휴대폰-화면-안보일때-데이터-백업-옮기는-방법",
+    "targetUrl": "/entry/갤럭시-휴대폰-화면-안보일때-데이터-백업-옮기는-방법",
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "Smart Switch·DeX·서비스센터 공식 안내로 전면 개정"
+  },
+  {
+    "title": "임산부 KTX SRT 할인 신청 방법(30% 할인)",
+    "currentSlug": "임산부-KTX-SRT-할인-신청-방법30-할인",
+    "status": "UPDATE",
+    "targetSlug": "임산부-KTX-SRT-할인-신청-방법30-할인",
+    "targetUrl": "/entry/임산부-KTX-SRT-할인-신청-방법30-할인",
+    "aliases": [
+      "임산부-KTX-SRT-할인-신청-방법(30%-할인)"
+    ],
+    "legacyPaths": [],
+    "notes": "KTX 40%와 SRT 30% 조건을 2026 기준으로 분리"
+  },
+  {
+    "title": "신생아 특례 대출 신청방법 조건 금리 한도",
+    "currentSlug": "신생아-특례-대출-신청방법-조건-금리-한도",
+    "status": "UPDATE",
+    "targetSlug": "신생아-특례-대출-신청방법-조건-금리-한도",
+    "targetUrl": "/entry/신생아-특례-대출-신청방법-조건-금리-한도",
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "주택도시기금 공식 심사 경로 중심으로 갱신"
+  },
+  {
+    "title": "다이소 제품 검색하는 방법",
+    "currentSlug": "다이소-제품-검색하는-방법",
+    "status": "UPDATE",
+    "targetSlug": "다이소-제품-검색하는-방법",
+    "targetUrl": "/entry/다이소-제품-검색하는-방법",
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "다이소몰 공식 재고 확인 경로로 갱신"
+  },
+  {
+    "title": "한국 사우디 축구 중계 방송 바로가기 아시안컵",
+    "currentSlug": "한국-사우디-축구-중계-방송-바로가기-아시안컵",
+    "status": "GONE",
+    "targetSlug": null,
+    "targetUrl": null,
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "종료된 특정 경기"
+  },
+  {
+    "title": "한국 말레이시아 축구 중계 방송 바로가기 아시안컵",
+    "currentSlug": "한국-말레이시아-축구-중계-방송-바로가기-아시안컵",
+    "status": "GONE",
+    "targetSlug": null,
+    "targetUrl": null,
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "종료된 특정 경기"
+  },
+  {
+    "title": "한국 요르단 축구 중계 방송 무료 보기",
+    "currentSlug": "한국-요르단-축구-중계-방송-무료-보기",
+    "status": "GONE",
+    "targetSlug": null,
+    "targetUrl": null,
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "종료된 특정 경기"
+  },
+  {
+    "title": "한국 바레인 축구 중계 방송 바로가기 아시안컵",
+    "currentSlug": "한국-바레인-축구-중계-방송-바로가기-아시안컵",
+    "status": "GONE",
+    "targetSlug": null,
+    "targetUrl": null,
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "종료된 특정 경기"
+  },
+  {
+    "title": "맘편한 임신 서비스 신청",
+    "currentSlug": "맘편한-임신-서비스-신청",
+    "status": "UPDATE",
+    "targetSlug": "맘편한-임신-서비스-신청",
+    "targetUrl": "/entry/맘편한-임신-서비스-신청",
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "정부24 원스톱 서비스 기준으로 갱신"
+  },
+  {
+    "title": "난방비 절약 방법 및 캐시백 받는 방법",
+    "currentSlug": "난방비-절약-방법-및-캐시백-받는-방법",
+    "status": "UPDATE",
+    "targetSlug": "난방비-절약-방법-및-캐시백-받는-방법",
+    "targetUrl": "/entry/난방비-절약-방법-및-캐시백-받는-방법",
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "종료된 2025~2026 접수 상태와 다음 공지 확인 경로 반영"
+  },
+  {
+    "title": "연말정산 월세공제 조건 및 신청방법",
+    "currentSlug": "연말정산-월세-소득공제-조건-및-신청방법",
+    "status": "UPDATE",
+    "targetSlug": "연말정산-월세-소득공제-조건-및-신청방법",
+    "targetUrl": "/entry/연말정산-월세-소득공제-조건-및-신청방법",
+    "aliases": [
+      "연말정산-월세공제-조건-및-신청방법"
+    ],
+    "legacyPaths": [],
+    "notes": "국세청 기준 세액공제·현금영수증 구분"
+  },
+  {
+    "title": "교통안전교육 예약 방법 (운전면허 필수과정)",
+    "currentSlug": "교통안전교육-예약-방법-운전면허-필수과정",
+    "status": "UPDATE",
+    "targetSlug": "교통안전교육-예약-방법-운전면허-필수과정",
+    "targetUrl": "/entry/교통안전교육-예약-방법-운전면허-필수과정",
+    "aliases": [
+      "교통안전교육-예약-방법-(운전면허-필수과정)"
+    ],
+    "legacyPaths": [],
+    "notes": "안전운전 통합민원 절차로 갱신"
+  },
+  {
+    "title": "2024 노인 지원 혜택 (최대 331만원 추가 지원)",
+    "currentSlug": "2024-노인-지원-혜택-최대-331만원-추가-지원",
+    "status": "REDIRECT",
+    "targetSlug": "노인-지원-혜택",
+    "targetUrl": "/entry/노인-지원-혜택",
+    "aliases": [
+      "2024-노인-지원-혜택-(최대-331만원-추가-지원)"
+    ],
+    "legacyPaths": [],
+    "notes": "과장된 금액을 제거한 연도 없는 대표 글로 통합"
+  },
+  {
+    "title": "갤럭시 수리 비용 조회",
+    "currentSlug": "갤럭시-수리-예상-비용-조회",
+    "status": "UPDATE",
+    "targetSlug": "갤럭시-수리-예상-비용-조회",
+    "targetUrl": "/entry/갤럭시-수리-예상-비용-조회",
+    "aliases": [
+      "갤럭시-수리-비용-조회"
+    ],
+    "legacyPaths": [],
+    "notes": "모델별 고정 가격 대신 삼성전자서비스 공식 조회 안내"
+  },
+  {
+    "title": "롯데월드 수험생 할인 받고 입장 (잠실, 부산)",
+    "currentSlug": "롯데월드-수험생-할인-받고-입장-잠실-부산",
+    "status": "UPDATE",
+    "targetSlug": "롯데월드-수험생-할인-받고-입장-잠실-부산",
+    "targetUrl": "/entry/롯데월드-수험생-할인-받고-입장-잠실-부산",
+    "aliases": [
+      "롯데월드-수험생-할인-받고-입장-(잠실,-부산)"
+    ],
+    "legacyPaths": [],
+    "notes": "기간 한정 프로모션의 공식 확인 방법으로 갱신"
+  },
+  {
+    "title": "나훈아 부산콘서트 예매 방법, 일정, 주차장",
+    "currentSlug": "나훈아-부산콘서트-예매-방법-일정-주차장",
+    "status": "GONE",
+    "targetSlug": null,
+    "targetUrl": null,
+    "aliases": [
+      "나훈아-부산콘서트-예매-방법,-일정,-주차장"
+    ],
+    "legacyPaths": [
+      "/53",
+      "/m/53"
+    ],
+    "notes": "종료된 특정 공연"
+  },
+  {
+    "title": "한국 베트남 축구 예매 및 중계 라인업 확인",
+    "currentSlug": "한국-베트남-축구-예매-및-중계-라인업-확인",
+    "status": "GONE",
+    "targetSlug": null,
+    "targetUrl": null,
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "종료된 특정 경기"
+  },
+  {
+    "title": "진주 유등축제 불꽃놀이 일정 기간 주차장 10월 가볼만한 곳",
+    "currentSlug": "진주-유등축제-불꽃놀이-일정-기간-주차장-10월-가볼만한-곳",
+    "status": "UPDATE",
+    "targetSlug": "진주-유등축제-불꽃놀이-일정-기간-주차장-10월-가볼만한-곳",
+    "targetUrl": "/entry/진주-유등축제-불꽃놀이-일정-기간-주차장-10월-가볼만한-곳",
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "2026 공식 축제 기간과 공지 확인 경로 반영"
+  },
+  {
+    "title": "결혼 답례품 추천 Top 5 (5천원대)",
+    "currentSlug": "결혼-답례품-추천-Top-5-5천원대",
+    "status": "UPDATE",
+    "targetSlug": "결혼-답례품-추천-Top-5-5천원대",
+    "targetUrl": "/entry/결혼-답례품-추천-Top-5-5천원대",
+    "aliases": [
+      "결혼-답례품-추천-Top-5-(5천원대)"
+    ],
+    "legacyPaths": [],
+    "notes": "가격 단정과 구매 유도 대신 선택 기준 중심으로 갱신"
+  },
+  {
+    "title": "타이젬 바둑 설치 방법 및 다운로드",
+    "currentSlug": "타이젬-바둑-설치-방법-및-다운로드",
+    "status": "UPDATE",
+    "targetSlug": "타이젬-바둑-설치-방법-및-다운로드",
+    "targetUrl": "/entry/타이젬-바둑-설치-방법-및-다운로드",
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "공식 다운로드·웹 대국실 경로로 갱신"
+  },
+  {
+    "title": "2023 서울 불꽃축제 시간 명당 준비물 실시간",
+    "currentSlug": "2023-서울-불꽃축제-시간-명당-준비물-실시간",
+    "status": "REDIRECT",
+    "targetSlug": "서울-불꽃축제-일정-명당-준비물",
+    "targetUrl": "/entry/서울-불꽃축제-일정-명당-준비물",
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "매년 갱신 가능한 연도 없는 대표 글로 통합"
+  },
+  {
+    "title": "국외발신 카드신청 완료 문자 대처 방법 (신한 국민 삼성 등)",
+    "currentSlug": "국외발신-카드신청-완료-문자-대처-방법-신한-국민-삼성-등",
+    "status": "KEEP",
+    "targetSlug": "국외발신-카드신청-완료-문자-대처-방법-신한-국민-삼성-등",
+    "targetUrl": "/entry/국외발신-카드신청-완료-문자-대처-방법-신한-국민-삼성-등",
+    "aliases": [
+      "국외발신-카드신청-완료-문자-대처-방법-(신한-국민-삼성-등)"
+    ],
+    "legacyPaths": [],
+    "notes": "문자 속 번호로 연락하지 않는 핵심 안전 안내 유지·갱신"
+  },
+  {
+    "title": "두산로보틱스 공모주 청약 정보 (경쟁률, 환불일, 상장일)",
+    "currentSlug": "두산로보틱스-공모주-청약-정보-경쟁률-환불일-상장일",
+    "status": "GONE",
+    "targetSlug": null,
+    "targetUrl": null,
+    "aliases": [
+      "두산로보틱스-공모주-청약-정보-(경쟁률,-환불일,-상장일)"
+    ],
+    "legacyPaths": [],
+    "notes": "종료된 공모주 청약 일정"
+  },
+  {
+    "title": "아이폰15 알뜰폰 사전예약 혜택 및 시리즈별 가격",
+    "currentSlug": "아이폰15-알뜰폰-사전예약-혜택-및-시리즈별-가격",
+    "status": "GONE",
+    "targetSlug": null,
+    "targetUrl": null,
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "종료된 출시·사전예약"
+  },
+  {
+    "title": "보일러 교체 지원금 신청 절차 및 자격 대상 (최대 60만원 받아가세요)",
+    "currentSlug": "보일러-교체-지원금-신청-절차-및-자격-대상-최대-60만원-받아가세요",
+    "status": "UPDATE",
+    "targetSlug": "보일러-교체-지원금-신청-절차-및-자격-대상-최대-60만원-받아가세요",
+    "targetUrl": "/entry/보일러-교체-지원금-신청-절차-및-자격-대상-최대-60만원-받아가세요",
+    "aliases": [
+      "보일러-교체-지원금-신청-절차-및-자격-대상-(최대-60만원-받아가세요)"
+    ],
+    "legacyPaths": [],
+    "notes": "지자체별 2026 공고 확인 방식으로 갱신"
+  },
+  {
+    "title": "RGB 색상표 컬러 색상 팔레트 바로 확인",
+    "currentSlug": "RGB-색상표-컬러-색상-팔레트-바로-확인",
+    "status": "UPDATE",
+    "targetSlug": "RGB-색상표-컬러-색상-팔레트-바로-확인",
+    "targetUrl": "/entry/RGB-색상표-컬러-색상-팔레트-바로-확인",
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "기술 설명을 교정하고 페이지 내 변환 도구 제공"
+  },
+  {
+    "title": "임영웅 대구콘서트 예매 티켓팅 꿀팁 서울 대구 부산 대전 광주",
+    "currentSlug": "임영웅-대구콘서트-예매-티켓팅-꿀팁-서울-대구-부산-대전-광주",
+    "status": "GONE",
+    "targetSlug": null,
+    "targetUrl": null,
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "종료된 특정 공연"
+  },
+  {
+    "title": "가전제품 버리는 방법 (소형가전 선풍기 포함)",
+    "currentSlug": "가전제품-버리는-방법-소형가전-선풍기-포함",
+    "status": "UPDATE",
+    "targetSlug": "가전제품-버리는-방법-소형가전-선풍기-포함",
+    "targetUrl": "/entry/가전제품-버리는-방법-소형가전-선풍기-포함",
+    "aliases": [
+      "가전제품-버리는-방법-(소형가전-선풍기-포함)"
+    ],
+    "legacyPaths": [],
+    "notes": "폐가전 무상방문수거 공식 안내로 갱신"
+  },
+  {
+    "title": "경복궁 야간개장 현장발권 예매 방법 및 주차장",
+    "currentSlug": "경복궁-야간개장-현장발권-예매-방법-및-주차장",
+    "status": "UPDATE",
+    "targetSlug": "경복궁-야간개장-현장발권-예매-방법-및-주차장",
+    "targetUrl": "/entry/경복궁-야간개장-현장발권-예매-방법-및-주차장",
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "2026 궁능유적본부 공식 일정 기준으로 갱신"
+  },
+  {
+    "title": "재산세 조회 납부일 카드혜택 무이자 할부",
+    "currentSlug": "재산세-조회-납부일-카드혜택-무이자-할부",
+    "status": "UPDATE",
+    "targetSlug": "재산세-조회-납부일-카드혜택-무이자-할부",
+    "targetUrl": "/entry/재산세-조회-납부일-카드혜택-무이자-할부",
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "오래된 카드 이벤트를 제거하고 공식 조회 경로로 갱신"
+  },
+  {
+    "title": "청와대 야간관람신청 밤의 산책 예약방법",
+    "currentSlug": "청와대-야간관람신청-밤의-산책-예약방법",
+    "status": "GONE",
+    "targetSlug": null,
+    "targetUrl": null,
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "종료된 특정 야간관람 행사"
+  },
+  {
+    "title": "신한카드 결제일별 사용기간 및 결제일 변경 방법",
+    "currentSlug": "신한카드-결제일별-사용기간-및-결제일-변경-방법",
+    "status": "UPDATE",
+    "targetSlug": "신한카드-결제일별-사용기간-및-결제일-변경-방법",
+    "targetUrl": "/entry/신한카드-결제일별-사용기간-및-결제일-변경-방법",
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "신한카드 공식 이용기간·변경 경로로 갱신"
+  },
+  {
+    "title": "모로코 지진 기부",
+    "currentSlug": "모로코-지진-기부",
+    "status": "GONE",
+    "targetSlug": null,
+    "targetUrl": null,
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "종료된 특정 재난 모금"
+  },
+  {
+    "title": "개인통관고유부호 발급방법 조회 재발급",
+    "currentSlug": "개인통관고유부호-발급방법-조회-재발급",
+    "status": "UPDATE",
+    "targetSlug": "개인통관고유부호-발급방법-조회-재발급",
+    "targetUrl": "/entry/개인통관고유부호-발급방법-조회-재발급",
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "관세청 공식 발급·도용예방 안내로 갱신"
+  },
+  {
+    "title": "주정차단속 문자알림 서비스 신청 방법 (전국)",
+    "currentSlug": "주정차단속-문자알림-서비스-신청-방법-전국",
+    "status": "UPDATE",
+    "targetSlug": "주정차단속-문자알림-서비스-신청-방법-전국",
+    "targetUrl": "/entry/주정차단속-문자알림-서비스-신청-방법-전국",
+    "aliases": [
+      "주정차단속-문자알림-서비스-신청-방법-(전국)"
+    ],
+    "legacyPaths": [],
+    "notes": "지자체별 서비스이며 단속 면제가 아님을 명확화"
+  },
+  {
+    "title": "모로코 지진 강진 사망자 및 기부 방법",
+    "currentSlug": "모로코-지진-강진-사망자-및-기부-방법",
+    "status": "GONE",
+    "targetSlug": null,
+    "targetUrl": null,
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "종료된 특정 재난·모금"
+  },
+  {
+    "title": "폴드5 톰브라운 에디션 출시일 및 사전예약 언박싱",
+    "currentSlug": "폴드5-톰브라운-에디션-출시일-및-사전예약-언박싱",
+    "status": "GONE",
+    "targetSlug": null,
+    "targetUrl": null,
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "종료된 출시·사전예약"
+  },
+  {
+    "title": "서울사랑상품권 발행일정 및 구매방법",
+    "currentSlug": "서울사랑상품권-발행일정-및-구매방법",
+    "status": "UPDATE",
+    "targetSlug": "서울사랑상품권-발행일정-및-구매방법",
+    "targetUrl": "/entry/서울사랑상품권-발행일정-및-구매방법",
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "2026 서울시 공지와 서울페이플러스 기준으로 갱신"
+  },
+  {
+    "title": "갤럭시 S23 울트라 액정 교체비용 (S20, S21, S22, 플립, 폴드)",
+    "currentSlug": "갤럭시-S23-울트라-액정-교체비용-S20-S21-S22-플립-폴드",
+    "status": "REDIRECT",
+    "targetSlug": "갤럭시-수리-예상-비용-조회",
+    "targetUrl": "/entry/갤럭시-수리-예상-비용-조회",
+    "aliases": [
+      "갤럭시-S23-울트라-액정-교체비용-(S20,-S21,-S22,-플립,-폴드)"
+    ],
+    "legacyPaths": [],
+    "notes": "갤럭시 수리 비용 대표 글로 통합"
+  },
+  {
+    "title": "KT 통신비 할인 카드 추천 Top (KTM모바일, Skylife 알뜰폰 포함)",
+    "currentSlug": "KT-통신비-할인-카드-추천",
+    "status": "UPDATE",
+    "targetSlug": "KT-통신비-할인-카드-추천",
+    "targetUrl": "/entry/KT-통신비-할인-카드-추천",
+    "aliases": [
+      "KT-통신비-할인-카드-추천-Top-(KTM모바일,-Skylife-알뜰폰-포함)"
+    ],
+    "legacyPaths": [],
+    "notes": "2023 프로모션을 제거하고 비교 기준 중심으로 갱신"
+  },
+  {
+    "title": "네이버 밴드 PC버전 다운로드 방법",
+    "currentSlug": "네이버-밴드-PC버전-다운로드-방법",
+    "status": "UPDATE",
+    "targetSlug": "네이버-밴드-PC버전-다운로드-방법",
+    "targetUrl": "/entry/네이버-밴드-PC버전-다운로드-방법",
+    "aliases": [],
+    "legacyPaths": [],
+    "notes": "BAND 공식 웹·다운로드 경로로 갱신"
+  }
+]

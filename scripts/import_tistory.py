@@ -587,7 +587,6 @@ def main() -> None:
 
     write_json(DATA_DIR / "guideArticles.json", migrated)
     write_json(DATA_DIR / "guideIndex.json", index_rows)
-    write_json(DATA_DIR / "guideRedirects.json", redirect_map)
     write_json(
         PUBLIC_GUIDES / "migration-manifest.json",
         {

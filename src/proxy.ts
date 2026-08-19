@@ -1,18 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import guideIndex from "@/data/guideIndex.json";
-import guideRedirects from "@/data/guideRedirects.json";
 import siteRedirects from "@/data/siteRedirects.json";
+import { legacyGonePaths, legacyRedirects } from "@/lib/legacyGuides";
 
-const redirects = {
-  ...(siteRedirects as Record<string, string>),
-  ...(guideRedirects as Record<string, string>),
-};
+const redirects = new Map<string, string>([
+  ...Object.entries(siteRedirects as Record<string, string>),
+  ...legacyRedirects,
+]);
 const canonicalGuidePaths = new Set(
   guideIndex.map((article) => `/entry/${article.slug}`),
 );
 const canonicalOrigin = "https://dreaming-free.com";
 const wwwHost = "www.dreaming-free.com";
 const legacyTistoryHost = "1step-by-step.tistory.com";
+const legacySubdomainHosts = new Set([
+  "dt.dreaming-free.com",
+  "honor.dreaming-free.com",
+  "bc.dreaming-free.com",
+]);
 
 function normalizedPath(pathname: string) {
   let decoded = pathname;
@@ -29,32 +34,43 @@ function normalizedPath(pathname: string) {
   return decoded.normalize("NFC").replace(/\/$/, "") || "/";
 }
 
-function legacyCommentDestination(source: string) {
-  const commentSuffix = "/comments";
-  if (!source.endsWith(commentSuffix)) return undefined;
-
-  const articlePath = source.slice(0, -commentSuffix.length);
-  return redirects[articlePath as keyof typeof redirects]
-    || (canonicalGuidePaths.has(articlePath) ? articlePath : undefined);
+function liveGuideDestination(source: string) {
+  let articlePath = source;
+  if (articlePath.endsWith("/comments")) articlePath = articlePath.slice(0, -"/comments".length);
+  if (articlePath.startsWith("/m/entry/")) articlePath = articlePath.slice(2);
+  if (articlePath === source || !canonicalGuidePaths.has(articlePath)) return undefined;
+  return articlePath;
 }
 
 export function proxy(request: NextRequest) {
   const hasTrailingSlash = request.nextUrl.pathname.length > 1 && request.nextUrl.pathname.endsWith("/");
   const source = normalizedPath(request.nextUrl.pathname);
-  const destination = redirects[source as keyof typeof redirects]
-    || legacyCommentDestination(source);
+  if (legacyGonePaths.has(source)) {
+    return new NextResponse(null, {
+      status: 410,
+      statusText: "Gone",
+      headers: {
+        "Cache-Control": "public, max-age=3600",
+        "X-Robots-Tag": "noindex, nofollow",
+      },
+    });
+  }
+  const destination = redirects.get(source) || liveGuideDestination(source);
   const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
   const requestHost = forwardedHost || request.headers.get("host") || request.nextUrl.hostname;
   const hostname = requestHost.split(":")[0].toLowerCase();
-  const shouldNormalizeHost = hostname === wwwHost || hostname === legacyTistoryHost;
+  const shouldNormalizeHost = hostname === wwwHost
+    || hostname === legacyTistoryHost
+    || legacySubdomainHosts.has(hostname);
   if ((!destination || destination === source) && !shouldNormalizeHost && !hasTrailingSlash) return NextResponse.next();
 
+  const hostDestination = source === "/" ? "/ko" : source;
   const target = shouldNormalizeHost
-    ? new URL(destination || source, canonicalOrigin)
+    ? new URL(destination || hostDestination, canonicalOrigin)
     : new URL(request.url);
-  target.pathname = destination || source;
+  target.pathname = destination || hostDestination;
   target.search = request.nextUrl.search;
-  return NextResponse.redirect(target, 301);
+  return NextResponse.redirect(target, 308);
 }
 
 export const config = {

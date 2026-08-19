@@ -8,7 +8,7 @@
 - 한국 생활 도구 10개: 급여 환산, 퇴직금, 4대보험, 주휴수당, 부가세, 평수, 서울 주택 중개보수, 가전 전력비, 음력·양력, 로또 번호
 - 글로벌 도구 10개: PDF 합치기·분리, BMI, 시간대, 포모도로, 랜덤 휠, JSON, Unix 타임스탬프, UUID, 여행 연료비, 영문 타자 속도
 - 웹 게임 3개: 2048, 기억력 카드 맞추기, Coral Sky 슈팅 게임
-- 기존 티스토리 생활 가이드 45개: 원래 글 경로·작성일·수정일 보존, 이미지 518개 자체 호스팅
+- 티스토리 레거시 가이드 45개를 분류해 현재 제공하는 생활 가이드 31개: KEEP 2, UPDATE 26, 새 대표 글 3개, 이미지 518개 자체 호스팅
 
 각 도구에는 사용법, 계산 원리, 활용 예시, 검증 방법, FAQ, 관련 도구가 포함됩니다. 출처가 필요한 계산기는 공공기관 또는 표준 문서 링크를 함께 표시합니다. About, Editorial Policy, Privacy, Terms, Contact 페이지도 한국어와 영어로 제공합니다.
 
@@ -96,22 +96,24 @@ npm run submit:indexnow -- /ko/tools/four-major-insurance
 
 ## 티스토리 글 이전
 
-- `https://1step-by-step.tistory.com/rss`와 sitemap에 함께 노출된 공개 글 45개를 `scripts/import_tistory.py`로 가져옵니다.
-- 기존 `dreaming-free.com/entry/<기존-슬러그>`는 새 사이트에서도 같은 주소로 `200`을 반환합니다.
-- 제목의 공백만 하이픈으로 바꾼 별칭과 `/m/entry/...` 주소는 `src/proxy.ts`에서 기존 canonical 주소로 정확한 `301`을 반환합니다.
-- 기존 모바일 홈 `/m`은 한국어 홈 `/ko`로, 모바일 글 목록 `/m/entry`는 `/entry`로 한 번에 `301` 이동합니다.
-- `src/app/sitemap.ts`가 빌드 시 도구·게임·정책 페이지와 45개 글을 합쳐 `/sitemap.xml`을 동적으로 생성합니다. 별칭과 모바일 중복 주소는 sitemap에 넣지 않습니다.
+- 최초 이전한 공개 글 45개는 `src/data/legacyGuides.json` 한 곳에서 KEEP 2, UPDATE 26, REDIRECT 4, GONE 13으로 관리합니다.
+- KEEP/UPDATE 28개는 기존 canonical에서 `200`, REDIRECT 4개의 새 대표 글 3개는 새 canonical에서 `200`입니다. 살아 있는 가이드는 총 31개입니다.
+- 제목 별칭과 `/m/entry/...`, `/comments` 주소는 `src/proxy.ts`에서 최종 canonical 주소로 정확한 `308`을 반환합니다.
+- 기존 모바일 홈 `/m`은 한국어 홈 `/ko`로, 모바일 글 목록 `/m/entry`는 `/entry`로 한 번에 `308` 이동합니다. `/m/*` 전체를 홈으로 보내는 wildcard는 사용하지 않습니다.
+- GONE 13개의 본문·모바일·댓글 변형은 redirect 없이 실제 `410 Gone`을 반환합니다.
+- `src/app/sitemap.ts`는 도구·게임·정책 페이지와 살아 있는 31개 글만 `/sitemap.xml`에 포함합니다. 별칭, 모바일·댓글, redirect source, 410 URL은 제외합니다.
 - 가져온 이미지 518개는 `public/guides`에 WebP로 보관하므로 서명 만료가 있는 외부 이미지 주소에 의존하지 않습니다.
-- 가져오기 스크립트는 기존 티스토리 광고·추적 코드와 iframe을 제거하고, 제휴 링크에 `nofollow sponsored`를 붙입니다.
+- `scripts/apply_legacy_cleanup.mjs`가 원본 이전 데이터에 최신 본문과 분류를 재현 가능하게 적용합니다. 최초 원문 가져오기 스크립트를 다시 실행하면 정리 데이터가 덮일 수 있으므로 이어서 cleanup script를 실행하고 diff를 검토해야 합니다.
 
-### 301 우선순위와 응답 규칙
+### 308/410 우선순위와 응답 규칙
 
 | 요청 | 응답 | 이유 |
 | --- | --- | --- |
-| `dreaming-free.com/entry/<기존-슬러그>` | `200` | 승인받았던 기존 도메인의 인기 URL을 그대로 보존 |
-| `dreaming-free.com/m/entry/<기존-슬러그>` | `301` | 모바일 중복 URL을 정규 URL로 통합 |
-| `dreaming-free.com/entry/<제목형-별칭>` | `301` | 사용자가 요청한 공백→하이픈 주소를 실제 기존 canonical에 통합 |
-| `www.dreaming-free.com/*` | `301` | 모든 경로와 쿼리를 `dreaming-free.com`으로 통합 |
+| KEEP/UPDATE `dreaming-free.com/entry/<기존-슬러그>` | `200` | 기존 URL과 SEO 신호 보존 |
+| KEEP/UPDATE의 모바일·댓글·별칭 | `308` | 한 번에 최종 canonical로 통합 |
+| REDIRECT source의 모든 변형 | `308` | 한 번에 새 대표 글로 통합 |
+| GONE source의 모든 변형 | `410` | 종료 콘텐츠를 별도 HTML이나 무관한 redirect 없이 제거 |
+| `www`와 연결된 구 서브도메인 | `308` | 경로·쿼리를 보존하며 운영 도메인 최종 상태로 정규화 |
 | 등록되지 않은 `/entry/*` | `404` | 관련 없는 글로 보내는 soft 404 방지 |
 
 프로덕션 빌드를 실행한 서버에 대해 아래 명령으로 전체 매핑을 확인할 수 있습니다.
@@ -121,9 +123,9 @@ $env:REDIRECT_TEST_ORIGIN='http://127.0.0.1:3000'
 npm run verify:routes
 ```
 
-현재 검증 기준은 정규 URL 45개 `200`, 별칭·모바일 URL 62개 `301`, 미등록 URL 1개 `404`입니다. `Location`은 쿼리 문자열을 보존한 절대 `https://dreaming-free.com/...` 주소여야 합니다.
+검증 기준은 legacy 분류 45개, 살아 있는 글 31개 `200`, 모든 모바일·댓글·별칭의 직접 `308`, GONE 변형의 직접 `410`, 미등록 URL의 `404`입니다. `Location`은 쿼리 문자열을 보존하고 redirect target은 추가 hop 없이 `200`이어야 합니다.
 
-도메인 연결과 실제 운영 환경 변수 등록이 끝나면 아래 명령으로 `robots.txt`, sitemap, 도구 60개, canonical, hreflang, Google·네이버 소유확인, IndexNow 키, 301, AdSense 메타 태그, `ads.txt`, 정책 페이지를 한 번에 검사합니다. 이 명령은 준비 누락을 찾는 기술 점검이며 검색 노출이나 Google의 심사 승인을 보장하는 명령은 아닙니다.
+도메인 연결과 실제 운영 환경 변수 등록이 끝나면 아래 명령으로 `robots.txt`, sitemap, 도구 60개, canonical, hreflang, Google·네이버 소유확인, IndexNow 키, 308/410, AdSense 메타 태그, `ads.txt`, 정책 페이지를 한 번에 검사합니다. 이 명령은 준비 누락을 찾는 기술 점검이며 검색 노출이나 Google의 심사 승인을 보장하는 명령은 아닙니다.
 
 ```powershell
 $env:LAUNCH_TEST_ORIGIN='https://dreaming-free.com'
@@ -136,7 +138,7 @@ npm run verify:launch
 python scripts/import_tistory.py
 ```
 
-주의: 새 Next.js 서버는 `1step-by-step.tistory.com`으로 들어온 요청을 받을 수 없습니다. 따라서 티스토리 호스트에서 `dreaming-free.com`으로 보내는 진짜 HTTP 301은 티스토리 측 서버 설정 또는 티스토리 앞단의 제어 가능한 프록시가 있어야 합니다. `docs/tistory-migration-head.html`은 서버 301이 불가능할 때 사용하는 브라우저 이동 보조안이며 HTTP 301이 아닙니다. 티스토리 정책을 먼저 확인한 뒤 사용하고, 가능하다면 서버 301을 우선하세요. 새 사이트 코드가 보장하는 301 범위는 새 도메인으로 실제 들어오는 제목형 별칭·모바일 중복 경로와 `www` 호스트입니다.
+주의: 새 Next.js 서버는 `1step-by-step.tistory.com`으로 들어온 요청을 받을 수 없습니다. 따라서 티스토리 호스트에서 `dreaming-free.com`으로 보내는 진짜 HTTP redirect는 티스토리 측 서버 설정 또는 티스토리 앞단의 제어 가능한 프록시가 있어야 합니다. `docs/tistory-migration-head.html`은 서버 redirect가 불가능할 때 사용하는 브라우저 이동 보조안이며 HTTP redirect가 아닙니다. 새 사이트 코드가 보장하는 범위는 새 도메인 또는 실제로 연결된 alias host로 들어오는 요청입니다.
 
 ## 언어와 국가 처리
 
@@ -160,7 +162,7 @@ python scripts/import_tistory.py
 9. Google Analytics는 유효한 측정 ID가 있어도 내장된 한·영 분석 동의 UI에서 허용하기 전에는 로드되지 않습니다. 배포할 때 Consent Mode와 보존기간을 실제 운영 정책에 맞게 설정합니다.
 10. 실제 기기에서 이미지 처리, PDF 처리, QR 다운로드, 게임의 터치 조작을 확인합니다.
 11. 배포된 사이트에서 `/robots.txt`, `/sitemap.xml`, `/ads.txt` 응답을 다시 확인합니다.
-12. 새 호스팅에서 `dreaming-free.com`과 `www`의 TLS 발급을 끝낸 뒤 가비아 DNS를 전환하고, 기존 인기 글 경로는 `200`, 모바일·제목형 별칭과 `www`는 한 번의 `301`만 거쳐 정규 URL에 도달하는지 확인합니다.
+12. 새 호스팅에서 `dreaming-free.com`과 `www`의 TLS 발급을 끝낸 뒤 DNS를 전환하고, 기존 인기 글은 `200`, 모바일·댓글·별칭과 `www`는 한 번의 `308`로 정규 URL에 도달하며 GONE은 직접 `410`인지 확인합니다.
 13. Search Console의 기존 `dreaming-free.com` 속성에서 sitemap을 다시 제출하고 404, canonical, 색인 상태를 모니터링합니다. 도메인이 유지되는 호스팅 이전이므로 주소 변경 도구는 사용하지 않습니다.
 14. `npm run verify:launch`가 도구 60개를 포함해 모두 통과하는지 확인합니다.
 15. AdSense의 사이트 상태와 `ads.txt` 승인 상태를 전환 후 다시 확인합니다.

@@ -4,11 +4,12 @@ import process from "node:process";
 const liveOrigin = (process.env.LAUNCH_TEST_ORIGIN || "https://dreaming-free.com").replace(/\/$/, "");
 const canonicalOrigin = (process.env.EXPECTED_SITE_ORIGIN || "https://dreaming-free.com").replace(/\/$/, "");
 const allowLocalRedirectOrigin = process.env.ALLOW_LOCAL_REDIRECT_ORIGIN === "true";
+const expectedAdsenseClient = process.env.EXPECTED_ADSENSE_CLIENT || "ca-pub-2981823212977040";
 const expectedAdsenseSlot = process.env.EXPECTED_ADSENSE_SLOT || "2675947950";
 const guideAdsExpected = process.env.NEXT_PUBLIC_GUIDE_ADS_ENABLED === "true";
 const googleMetaVerificationExpected = process.env.EXPECT_GOOGLE_META_VERIFICATION === "true";
 const articles = JSON.parse(await readFile("src/data/guideIndex.json", "utf8"));
-const redirects = JSON.parse(await readFile("src/data/guideRedirects.json", "utf8"));
+const legacyGuides = JSON.parse(await readFile("src/data/legacyGuides.json", "utf8"));
 const failures = [];
 const checks = [];
 let sitemapLocations = [];
@@ -116,6 +117,8 @@ if (koreanHomeResponse) {
   expect(!hrefs.includes("/"), "/ko contains no internal home link to the redirecting root URL");
   expect(hrefs.includes("/ko"), "/ko home links point to the final Korean homepage URL");
   expect(rssHref(koreanHomeHtml) === `${canonicalOrigin}/rss`, "/ko advertises the canonical RSS feed");
+  expect(metaContent(koreanHomeHtml, "google-adsense-account") === expectedAdsenseClient, "/ko preserves the expected AdSense publisher meta value");
+  expect(koreanHomeHtml.includes(`pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${expectedAdsenseClient}`), "/ko preserves the AdSense loader script and publisher client");
   expect(adSlotCount(koreanHomeHtml) === 1, "/ko contains one manual responsive AdSense slot");
   expect(koreanHomeHtml.includes('data-full-width-responsive="true"'), "/ko enables full-width responsive mobile ads");
 }
@@ -125,20 +128,15 @@ for (const [mobilePath, expectedPath] of [["/m", "/ko"], ["/m/", "/ko"], ["/m/en
   if (mobileResponse) {
     const location = mobileResponse.headers.get("location");
     const target = location ? new URL(location, liveOrigin) : null;
-    expect(mobileResponse.status === 301, `${mobilePath} returns 301 Permanent Redirect (received ${mobileResponse.status})`);
+    expect(mobileResponse.status === 308, `${mobilePath} returns 308 Permanent Redirect (received ${mobileResponse.status})`);
     expect(Boolean(target) && target.pathname === expectedPath, `${mobilePath} redirects directly to ${expectedPath}`);
   }
 }
 
 const numericLegacyResponse = await request("/53");
 if (numericLegacyResponse) {
-  const location = numericLegacyResponse.headers.get("location");
-  const target = location ? new URL(location, liveOrigin) : null;
-  expect(numericLegacyResponse.status === 301, `/53 returns 301 Permanent Redirect (received ${numericLegacyResponse.status})`);
-  expect(
-    Boolean(target) && decodeURIComponent(target.pathname) === "/entry/나훈아-부산콘서트-예매-방법-일정-주차장",
-    "/53 redirects directly to its migrated guide",
-  );
+  expect(numericLegacyResponse.status === 410, `/53 returns 410 Gone (received ${numericLegacyResponse.status})`);
+  expect(!numericLegacyResponse.headers.get("location"), "/53 does not redirect to another page");
 }
 
 const robotsResponse = await request("/robots.txt");
@@ -261,7 +259,7 @@ if (hubResponse) {
   expect(!metaContent(hubHtml, "robots").includes("noindex"), "/entry is not marked noindex");
   expect(!hubHtml.includes("moatools.example"), "/entry contains no placeholder domain");
   expect(rssHref(hubHtml) === `${canonicalOrigin}/rss`, "/entry advertises the canonical RSS feed");
-  expect(/^ca-pub-\d+$/.test(metaContent(hubHtml, "google-adsense-account")), "/entry exposes a valid AdSense site-verification meta tag");
+  expect(metaContent(hubHtml, "google-adsense-account") === expectedAdsenseClient, "/entry preserves the expected AdSense site-verification meta value");
 }
 
 const guideSitemapLocations = sitemapLocations.filter((location) => new URL(location).pathname.startsWith("/entry/"));
@@ -292,7 +290,7 @@ for (const article of articles) {
   if (!mobileResponse) continue;
   const location = mobileResponse.headers.get("location");
   const target = location ? new URL(location, liveOrigin) : null;
-  expect(mobileResponse.status === 301, `${mobilePath} returns 301 (received ${mobileResponse.status})`);
+  expect(mobileResponse.status === 308, `${mobilePath} returns 308 (received ${mobileResponse.status})`);
   expect(Boolean(target) && decodeURIComponent(target.pathname) === pathname, `${mobilePath} redirects directly to its canonical guide`);
 
   for (const commentsPath of [`${pathname}/comments`, `${mobilePath}/comments`]) {
@@ -300,7 +298,7 @@ for (const article of articles) {
     if (!commentsResponse) continue;
     const commentsLocation = commentsResponse.headers.get("location");
     const commentsTarget = commentsLocation ? new URL(commentsLocation, liveOrigin) : null;
-    expect(commentsResponse.status === 301, `${commentsPath} returns 301 (received ${commentsResponse.status})`);
+    expect(commentsResponse.status === 308, `${commentsPath} returns 308 (received ${commentsResponse.status})`);
     expect(
       Boolean(commentsTarget) && decodeURIComponent(commentsTarget.pathname) === pathname,
       `${commentsPath} redirects directly to its canonical guide`,
@@ -323,13 +321,15 @@ if (gameResponse) {
   expect(adSlotCount(gameHtml) === 1, `${gamePath} contains one manual responsive AdSense slot`);
 }
 
-const [alias, destination] = Object.entries(redirects)[0];
+const representativeRedirect = legacyGuides.find((guide) => guide.status === "REDIRECT");
+const alias = `/entry/${representativeRedirect.currentSlug}`;
+const destination = representativeRedirect.targetUrl;
 const aliasResponse = await request(alias);
 if (aliasResponse) {
   const location = aliasResponse.headers.get("location");
   const target = location ? new URL(location, liveOrigin) : null;
   const targetPath = target ? decodeURIComponent(target.pathname).normalize("NFC") : "";
-  expect(aliasResponse.status === 301, `${alias} returns 301 (received ${aliasResponse.status})`);
+  expect(aliasResponse.status === 308, `${alias} returns 308 (received ${aliasResponse.status})`);
   expect(
     Boolean(target)
       && targetPath === destination.normalize("NFC")
@@ -342,7 +342,7 @@ const adsResponse = await request("/ads.txt");
 if (adsResponse) {
   const adsText = await adsResponse.text();
   expect(adsResponse.status === 200, `/ads.txt returns 200 (received ${adsResponse.status})`);
-  expect(/^google\.com, pub-\d+, DIRECT, f08c47fec0942fa0\s*$/m.test(adsText), "/ads.txt contains a valid Google publisher record");
+  expect(adsText.trim() === `google.com, ${expectedAdsenseClient.replace("ca-", "")}, DIRECT, f08c47fec0942fa0`, "/ads.txt preserves the expected Google publisher record");
 }
 
 const indexNowKeyResponse = await request("/indexnow-key.txt");

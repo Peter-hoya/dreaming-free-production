@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { AdSlot } from "@/components/AdSlot";
 import { ArticleToc } from "@/components/guides/ArticleToc";
 import { RelatedGuides } from "@/components/guides/RelatedGuides";
+import { RgbColorTool } from "@/components/guides/RgbColorTool";
 import { JsonLd } from "@/components/JsonLd";
 import { isArchiveOnlyGuide, isGuideAdEligible } from "@/data/guideQuality";
 import {
@@ -103,6 +104,7 @@ export default async function GuideArticlePage({ params }: GuidePageProps) {
   const canonical = absoluteUrl(canonicalPath);
   const related = getRelatedGuides(article);
   const showGuideAd = isGuideAdEligible(article.slug);
+  const showRgbTool = article.slug === "RGB-색상표-컬러-색상-팔레트-바로-확인";
   const [contentBeforeAd, contentAfterAd] = showGuideAd
     ? splitGuideContent(article.contentHtml)
     : [article.contentHtml, ""];
@@ -196,8 +198,8 @@ export default async function GuideArticlePage({ params }: GuidePageProps) {
             <aside className="guide-freshness-note" aria-label="정보 확인 안내">
               <strong>읽기 전에 확인해주세요.</strong>
               <p>
-                이 글은 기존 블로그에서 원문을 이전한 자료입니다. 작성·수정일 이후 제도, 가격,
-                일정과 외부 링크가 바뀌었을 수 있으니 신청이나 결제 전 공식 안내를 다시 확인하세요.
+                2026년 8월 19일에 공식 출처를 기준으로 내용을 점검했습니다. 제도, 가격과 일정은
+                바뀔 수 있으니 신청이나 결제 직전에 본문 하단의 공식 안내를 다시 확인하세요.
               </p>
             </aside>
 
@@ -215,6 +217,8 @@ export default async function GuideArticlePage({ params }: GuidePageProps) {
             <div className="guide-toc-mobile">
               <ArticleToc headings={article.headings} />
             </div>
+
+            {showRgbTool ? <RgbColorTool /> : null}
 
             <div
               className="guide-article-content"
