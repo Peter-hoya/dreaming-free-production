@@ -158,15 +158,6 @@ export default async function GamePage({ params }: { params: Promise<{ locale: s
             { "@type": "ListItem", position: 2, name: game.title[locale], item: pageUrl },
           ],
         },
-        {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: faqs.map((item) => ({
-            "@type": "Question",
-            name: item.question,
-            acceptedAnswer: { "@type": "Answer", text: item.answer },
-          })),
-        },
       ]} />
     </>
   );

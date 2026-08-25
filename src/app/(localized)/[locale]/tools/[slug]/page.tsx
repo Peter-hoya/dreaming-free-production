@@ -95,18 +95,6 @@ export default async function ToolPage({ params }: { params: Promise<{ locale: s
         { "@type": "ListItem", position: 3, name: searchMetadata.heading, item: pageUrl },
       ],
     },
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "@id": `${pageUrl}#faq`,
-      url: `${pageUrl}#faq`,
-      isPartOf: { "@id": webPageId },
-      mainEntity: tool.faqs[locale].map((item) => ({
-        "@type": "Question",
-        name: item.question,
-        acceptedAnswer: { "@type": "Answer", text: item.answer },
-      })),
-    },
   ];
 
   return (
