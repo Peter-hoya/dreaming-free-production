@@ -42,12 +42,16 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     },
     {
       "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: copy.homeFaqs.map(([question, answer]) => ({
-        "@type": "Question",
-        name: question,
-        acceptedAnswer: { "@type": "Answer", text: answer },
-      })),
+      "@type": "WebPage",
+      "@id": `${absoluteUrl(`/${locale}`)}#webpage`,
+      name: locale === "ko" ? "무료 온라인 계산기와 생활 도구" : "Free Online Calculators and Everyday Tools",
+      description: locale === "ko"
+        ? "한국 생활 계산기, PDF, 시간대, 개발, 이미지, 글쓰기까지 30개 도구와 3개 무료 웹 게임을 브라우저에서 사용하세요."
+        : "Use 30 free browser tools plus 3 games for PDFs, time zones, finance, health, development, writing, images, and planning.",
+      url: absoluteUrl(`/${locale}`),
+      inLanguage: locale,
+      isPartOf: { "@id": absoluteUrl("/ko#website") },
+      about: { "@id": absoluteUrl("/ko#organization") },
     },
   ];
 

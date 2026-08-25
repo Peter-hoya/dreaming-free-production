@@ -10,6 +10,7 @@ import { isLocale, locales, type Locale } from "@/data/site";
 import { adsenseClient } from "@/lib/adsense";
 import {
   absoluteUrl,
+  contactEmail,
   isSiteReadyForIndexing,
   operatorName,
   reviewerName,
@@ -111,10 +112,21 @@ export default async function LocaleLayout({
     alternateName: "모아툴",
     legalName: operatorName || undefined,
     url: absoluteUrl("/ko"),
+    logo: absoluteUrl("/icon.svg"),
     description:
       locale === "ko"
         ? "무료 온라인 계산기와 생활 도구"
         : "Free online calculators and everyday tools",
+    ...(contactEmail
+      ? {
+          contactPoint: {
+            "@type": "ContactPoint",
+            email: contactEmail,
+            contactType: "customer support",
+            availableLanguage: ["Korean", "English"],
+          },
+        }
+      : {}),
   };
 
   return (
