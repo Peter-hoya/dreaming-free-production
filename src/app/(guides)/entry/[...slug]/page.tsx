@@ -64,7 +64,10 @@ export async function generateMetadata({ params }: GuidePageProps): Promise<Meta
     description,
     keywords: [article.title, article.category, "생활 가이드"],
     authors: [{ name: article.author }],
-    alternates: { canonical },
+    alternates: {
+      canonical,
+      languages: { ko: canonical, "x-default": canonical },
+    },
     openGraph: {
       type: "article",
       locale: "ko_KR",

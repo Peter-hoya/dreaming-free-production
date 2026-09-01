@@ -47,7 +47,7 @@ export default async function ToolPage({ params }: { params: Promise<{ locale: s
   const applicationId = `${pageUrl}#application`;
   const breadcrumbId = `${pageUrl}#breadcrumb`;
   const description = searchMetadata.description;
-  const structuredData = [
+  const structuredData: any[] = [
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
@@ -96,6 +96,22 @@ export default async function ToolPage({ params }: { params: Promise<{ locale: s
       ],
     },
   ];
+
+  if (tool.faqs[locale].length > 0) {
+    structuredData.push({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "@id": `${pageUrl}#faq`,
+      mainEntity: tool.faqs[locale].map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq.answer,
+        },
+      })),
+    });
+  }
 
   return (
     <>

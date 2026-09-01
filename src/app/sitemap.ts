@@ -7,12 +7,9 @@ import { absoluteUrl } from "@/lib/seo";
 
 export const revalidate = 86400;
 
-const reviewed = new Date("2026-07-21T00:00:00.000Z");
-
 function entry(path: string): MetadataRoute.Sitemap[number] {
   return {
     url: absoluteUrl(path),
-    lastModified: reviewed,
   };
 }
 
