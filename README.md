@@ -174,5 +174,15 @@ AdSense 승인과 검색 순위는 콘텐츠 품질, 운영 이력, 정책 준�
 
 - **SEO 최적화 및 리다이렉트 처리**: 루트 URL(`/`) 접속 시 `/ko`로 확실히 이동되도록 `next.config.ts` 및 `siteRedirects.json`에 영구 리다이렉트(308) 룰을 적용했습니다.
 - **Sitemap 개선**: 동적으로 변경되지 않는 정적 도구 페이지의 `lastModified`를 제거하여 구글봇 크롤링 효율을 높였습니다.
-- **다국어 및 리치 스니펫 대응**: 생활 가이드 페이지에 한국어(`ko`) hreflang 속성을 명시하고, 각 도구 페이지의 자주 묻는 질문(FAQ)에 `FAQPage` 구조화 데이터를 자동으로 삽입하여 검색 노출 기회를 확대했습니다.
+- **다국어 대응**: 생활 가이드 페이지에 한국어(`ko`) hreflang 속성을 명시했습니다.
 - **애드센스 호환성 유지**: SEO 구조 개선 작업을 진행하면서 기존 `layout.tsx`에 삽입된 AdSense 스크립트 실행에 영향이 가지 않도록 구조적 안정성을 검증했습니다.
+
+## 최근 업데이트 (2026-10) — claude-seo v2.4.2 기준 점검
+
+[`AgriciDaniel/claude-seo`](https://github.com/AgriciDaniel/claude-seo) v2.4.2 스킬을 `.agents/skills/`에 설치하고, 그 체크리스트(technical, schema, geo, agentic)로 코드를 점검해 아래 항목을 반영했습니다. 자세한 근거는 `docs/seo-claude-seo-2026-10.md`에 있습니다.
+
+- **FAQPage 구조화 데이터 제거(도구 페이지)**: Google이 2026-05-07부로 모든 사이트의 FAQ 리치 결과를 종료했으므로, 2026-09 커밋에서 다시 추가된 도구 페이지의 `FAQPage` JSON-LD를 제거했습니다. `npm run verify:seo-framework`가 이 항목의 부재를 검사합니다. 화면의 FAQ(`<details>`)는 그대로 유지합니다.
+- **HSTS 헤더 추가**: `Strict-Transport-Security: max-age=31536000`. 리다이렉트 전용 구 서브도메인이 TLS가 없을 수 있어 `includeSubDomains`는 넣지 않았습니다.
+- **robots.txt AI 크롤러 정책**: `src/app/robots.txt/route.ts`로 전환했습니다. 일반 검색엔진(`*`)과 AI 검색·인용 크롤러(OAI-SearchBot, ChatGPT-User, Claude-SearchBot, Claude-User, PerplexityBot, Perplexity-User)는 허용하고, AI 학습용 크롤러(GPTBot, ClaudeBot, Google-Extended, Applebot-Extended, CCBot, Bytespider, meta-externalagent)는 차단합니다. 각 그룹에 `Content-Signal: search=yes, ai-input=yes, ai-train=no`를 넣었습니다. Google 검색과 AI Overviews는 Googlebot이 담당하므로 이 정책은 Google 검색 노출에 영향을 주지 않습니다. Content-Signal은 표준이 확정되지 않은 의사 표시입니다.
+- **`/llms.txt` 추가**: 도구·게임·가이드·정책 페이지 데이터에서 자동으로 만듭니다. 출시 전 noindex 상태에서는 404를 반환합니다. AI 에이전트가 사이트를 찾는 데 도움을 주는 파일일 뿐, 검색 순위 신호는 아닙니다.
+- **검증 스크립트 갱신**: `verify:seo-framework`, `verify:launch`가 robots.txt 전체 차단 여부를 `User-agent: *` 그룹에서만 검사하고, `/llms.txt` 형식(H1, Markdown 링크, 50자 이상)을 확인합니다.

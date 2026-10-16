@@ -62,10 +62,18 @@ expect(homeHtml.includes("<details"), "/ko must keep its visible FAQ after struc
 
 const robotsResponse = await request("/robots.txt");
 const robots = await robotsResponse.text();
+// AI training crawlers intentionally get `Disallow: /`; only the universal group must stay open.
+const universalGroup = robots.split(/\r?\n\s*\r?\n/).find((block) => /^User-agent:\s*\*\s*$/im.test(block)) || "";
 expect(robotsResponse.status === 200, `/robots.txt expected 200, received ${robotsResponse.status}`);
-expect(/User-agent:\s*\*/i.test(robots), "/robots.txt is missing the universal crawler rule");
+expect(Boolean(universalGroup), "/robots.txt is missing the universal crawler rule");
 if (expectIndexable) {
-  expect(/Allow:\s*\//i.test(robots) && !/Disallow:\s*\/(?:\s|$)/im.test(robots), "/robots.txt blocks indexing unexpectedly");
+  expect(/Allow:\s*\//i.test(universalGroup) && !/Disallow:\s*\/(?:\s|$)/im.test(universalGroup), "/robots.txt blocks indexing unexpectedly");
+  expect(/^User-agent:\s*OAI-SearchBot\s*$/im.test(robots), "/robots.txt is missing the AI search crawler group");
+
+  const llmsResponse = await request("/llms.txt");
+  const llms = await llmsResponse.text();
+  expect(llmsResponse.status === 200, `/llms.txt expected 200, received ${llmsResponse.status}`);
+  expect(/^\s*#\s+.+/m.test(llms) && /\[[^\]]+\]\([^)]+\)/.test(llms) && llms.length >= 50, "/llms.txt needs an H1, a Markdown link, and 50+ characters");
 }
 
 const sitemapResponse = await request("/sitemap.xml");

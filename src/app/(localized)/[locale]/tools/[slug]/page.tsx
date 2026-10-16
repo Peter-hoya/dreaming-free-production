@@ -47,7 +47,7 @@ export default async function ToolPage({ params }: { params: Promise<{ locale: s
   const applicationId = `${pageUrl}#application`;
   const breadcrumbId = `${pageUrl}#breadcrumb`;
   const description = searchMetadata.description;
-  const structuredData: any[] = [
+  const structuredData: Array<Record<string, unknown>> = [
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
@@ -97,21 +97,9 @@ export default async function ToolPage({ params }: { params: Promise<{ locale: s
     },
   ];
 
-  if (tool.faqs[locale].length > 0) {
-    structuredData.push({
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "@id": `${pageUrl}#faq`,
-      mainEntity: tool.faqs[locale].map((faq) => ({
-        "@type": "Question",
-        name: faq.question,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: faq.answer,
-        },
-      })),
-    });
-  }
+  // FAQPage JSON-LD is intentionally omitted: Google retired FAQ rich results for
+  // all sites (2026-05-07) and verify:seo-framework asserts its absence. The
+  // visible <details> FAQ below stays as on-page content.
 
   return (
     <>

@@ -142,9 +142,18 @@ if (numericLegacyResponse) {
 const robotsResponse = await request("/robots.txt");
 if (robotsResponse) {
   const robots = await robotsResponse.text();
+  // AI training crawlers intentionally get `Disallow: /`; only the universal group must stay open.
+  const universalGroup = robots.split(/\r?\n\s*\r?\n/).find((block) => /^User-agent:\s*\*\s*$/im.test(block)) || "";
   expect(robotsResponse.status === 200, `/robots.txt returns 200 (received ${robotsResponse.status})`);
-  expect(!/^Disallow:\s*\/$/im.test(robots), "/robots.txt does not block the entire site");
+  expect(Boolean(universalGroup) && !/^Disallow:\s*\/\s*$/im.test(universalGroup), "/robots.txt does not block the entire site for User-agent: *");
   expect(robots.includes(`${canonicalOrigin}/sitemap.xml`), "/robots.txt lists the production sitemap");
+}
+
+const llmsResponse = await request("/llms.txt");
+if (llmsResponse) {
+  const llms = await llmsResponse.text();
+  expect(llmsResponse.status === 200, `/llms.txt returns 200 (received ${llmsResponse.status})`);
+  expect(/^\s*#\s+.+/m.test(llms) && /\[[^\]]+\]\([^)]+\)/.test(llms) && llms.length >= 50, "/llms.txt has an H1, Markdown links, and 50+ characters");
 }
 
 const sitemapResponse = await request("/sitemap.xml");
