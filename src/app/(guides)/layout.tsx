@@ -19,7 +19,9 @@ import "./guides.css";
 
 const guideAdsEnabled = process.env.NEXT_PUBLIC_GUIDE_ADS_ENABLED === "true";
 
-export const revalidate = 86400;
+// Guides are built from static JSON. Keep them fully static: on Netlify, ISR
+// regeneration of the Korean (non-ASCII) slugs cached 404s for live articles.
+export const revalidate = false;
 
 export const viewport: Viewport = {
   width: "device-width",

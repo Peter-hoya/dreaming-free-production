@@ -30,7 +30,9 @@ function splitGuideContent(contentHtml: string) {
   return [contentHtml.slice(0, splitAt), contentHtml.slice(splitAt)] as const;
 }
 
-export const dynamicParams = false;
+// Unknown slugs still 404 via notFound() below. Leaving dynamicParams on lets a
+// prerender cache miss on an encoded Korean path render instead of 404ing.
+export const revalidate = false;
 
 export function generateStaticParams() {
   return guides.map((article) => ({ slug: article.slug.split("/") }));

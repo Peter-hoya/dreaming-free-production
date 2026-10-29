@@ -2,7 +2,7 @@ import { ArrowDown, ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { GuideExplorer } from "@/components/guides/GuideExplorer";
 import { isLocale } from "@/data/site";
 import { guidePath, guideSummaries } from "@/lib/guides";
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function LocalizedGuidesPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  if (locale === "ko") redirect("/entry");
+  if (locale === "ko") permanentRedirect("/entry");
 
   return (
     <div className="guide-site">
@@ -39,7 +39,7 @@ export default async function LocalizedGuidesPage({ params }: { params: Promise<
             <h1 id="localized-guide-title">Korean guides, inside the English menu</h1>
             <p>The articles remain in Korean so their original URLs and search history stay intact. You can browse the full archive here without changing the site navigation language.</p>
             <a className="guide-primary-link" href="#guide-library">
-              Browse 45 Korean guides
+              Browse {guideSummaries.length} Korean guides
               <ArrowDown size={18} weight="bold" aria-hidden="true" />
             </a>
           </div>
